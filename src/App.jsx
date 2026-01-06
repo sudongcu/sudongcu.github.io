@@ -1,4 +1,5 @@
 import { Navbar, Hero, About, Experience, TechStack, ProjectList, Contact } from './components';
+import Blog from './components/sections/Blog';
 import './App.css';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Experience />
         <TechStack />
         <ProjectList />
+        <Blog />
         <Contact />
       </main>
     </div>

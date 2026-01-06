@@ -4,6 +4,7 @@ export const NAV_LINKS = [
   { id: 'experience', title: 'Experience', href: '#experience' },
   { id: 'skills', title: 'Skills', href: '#skills' },
   { id: 'projects', title: 'Projects', href: '#projects' },
+  { id: 'blog', title: 'Blog', href: '#blog' },
   { id: 'contact', title: 'Contact', href: '#contact' },
 ];
 
