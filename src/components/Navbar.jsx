@@ -6,6 +6,27 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
+  const [displayedText, setDisplayedText] = useState('');
+
+  const fullText = 'D.O.N.G.G.U';
+
+  useEffect(() => {
+    if (isLogoHovered) {
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index <= fullText.length) {
+          setDisplayedText(fullText.slice(0, index));
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 80);
+      return () => clearInterval(interval);
+    } else {
+      setDisplayedText('');
+    }
+  }, [isLogoHovered]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,15 +34,23 @@ const Navbar = () => {
 
       // Update active section based on scroll position
       const sections = NAV_LINKS.map(link => link.id);
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (current) setActiveSection(current);
+      
+      // Check if we're near the bottom of the page
+      const isNearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+      
+      if (isNearBottom) {
+        setActiveSection('contact');
+      } else {
+        const current = sections.find(section => {
+          const element = document.getElementById(section);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            return rect.top <= 100 && rect.bottom >= 100;
+          }
+          return false;
+        });
+        if (current) setActiveSection(current);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -60,9 +89,15 @@ const Navbar = () => {
             <a
               href="#home"
               onClick={(e) => handleNavClick(e, '#home')}
-              className="text-2xl font-bold text-gradient hover:scale-105 transition-transform"
+              onMouseEnter={() => setIsLogoHovered(true)}
+              onMouseLeave={() => setIsLogoHovered(false)}
+              className="flex items-center gap-1 group cursor-pointer"
             >
-              Portfolio
+              <span className="text-primary-400 text-2xl font-mono group-hover:text-primary-300 transition-colors">{'<'}</span>
+              <span className="text-2xl font-bold text-gradient transition-all overflow-hidden inline-block" style={{ width: isLogoHovered ? '142px' : '0px' }}>
+                {displayedText}
+              </span>
+              <span className="text-primary-400 text-2xl font-mono group-hover:text-primary-300 transition-colors">{'>'}</span>
             </a>
           </div>
 

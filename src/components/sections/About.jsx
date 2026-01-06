@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { User } from 'lucide-react';
+import { TypeAnimation } from 'react-type-animation';
 
 const About = () => {
   return (
@@ -27,24 +27,15 @@ const About = () => {
           transition={{ duration: 0.8 }}
         >
           <div className="bg-gradient-to-r from-dark-700 to-dark-600 rounded-2xl p-8 md:p-12 border border-dark-600 hover:border-primary-500/30 transition-all shadow-xl">
-            <div className="flex items-center justify-center mb-8">
-              <div className="p-4 bg-primary-500/20 rounded-full">
-                <User className="w-12 h-12 text-primary-400" />
-              </div>
-            </div>
-            
-            <p className="text-gray-300 text-lg leading-relaxed text-center mb-6">
-              I'm a passionate full-stack developer with a strong focus on creating
-              elegant, efficient, and user-friendly web applications. With expertise
-              in modern frameworks and technologies, I bring ideas to life through
-              clean code and thoughtful design.
-            </p>
-            
-            <p className="text-gray-400 text-base leading-relaxed text-center">
-              I'm constantly learning and adapting to new technologies to stay at 
-              the forefront of web development. My goal is to build digital experiences 
-              that not only look great but also provide real value to users.
-            </p>
+            <TypeAnimation
+              sequence={[
+                'Hi, I am Donggu Seo, a Senior .NET developer with over 11 years of experience in building and operating web services. I\'ve worked across various domains including e-commerce, travel reservations, and back-office systems.',
+              ]}
+              wrapper="p"
+              speed={70}
+              className="text-gray-300 text-lg leading-relaxed text-center"
+              cursor={false}
+            />
           </div>
         </motion.div>
       </div>

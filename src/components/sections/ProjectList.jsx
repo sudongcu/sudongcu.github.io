@@ -37,7 +37,7 @@ const ProjectList = () => {
             Featured <span className="text-gradient">Projects</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            A selection of my recent work and personal projects
+            A selection of my projects
           </p>
         </motion.div>
 
@@ -66,11 +66,19 @@ const ProjectList = () => {
 
               {/* Project Image Placeholder */}
               <div className="relative h-48 bg-gradient-to-br from-primary-500/20 to-primary-700/20 overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-primary-400 text-6xl font-bold opacity-20">
-                    {project.title.charAt(0)}
+                {project.image ? (
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-primary-400 text-6xl font-bold opacity-20">
+                      {project.title.charAt(0)}
+                    </div>
                   </div>
-                </div>
+                )}
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-dark-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                   <a
@@ -82,15 +90,17 @@ const ProjectList = () => {
                   >
                     <ExternalLink className="w-5 h-5 text-white" />
                   </a>
-                  <a
-                    href={project.githubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 bg-dark-700 rounded-full hover:bg-dark-600 transition-colors"
-                    aria-label="View Code"
-                  >
-                    <Github className="w-5 h-5 text-white" />
-                  </a>
+                  {project.githubLink && (
+                    <a
+                      href={project.githubLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 bg-dark-700 rounded-full hover:bg-dark-600 transition-colors"
+                      aria-label="View Code"
+                    >
+                      <Github className="w-5 h-5 text-white" />
+                    </a>
+                  )}
                 </div>
               </div>
 
@@ -122,20 +132,22 @@ const ProjectList = () => {
                   href={project.demoLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors"
+                  className={`${project.githubLink ? 'flex-1' : 'w-full'} flex items-center justify-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors`}
                 >
                   <ExternalLink className="w-4 h-4" />
                   Live Demo
                 </a>
-                <a
-                  href={project.githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-primary-500 text-primary-400 hover:bg-primary-500/10 rounded-lg font-medium transition-colors"
-                >
-                  <Github className="w-4 h-4" />
-                  Code
-                </a>
+                {project.githubLink && (
+                  <a
+                    href={project.githubLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-primary-500 text-primary-400 hover:bg-primary-500/10 rounded-lg font-medium transition-colors"
+                  >
+                    <Github className="w-4 h-4" />
+                    Code
+                  </a>
+                )}
               </div>
             </motion.div>
           ))}

@@ -54,12 +54,12 @@ const Hero = () => {
             >
               <span className="text-white">{HERO_TEXT.name}</span>
               <br />
-              <span className="text-gradient">{HERO_TEXT.title}</span>
+              <span className="text-gradient mt-4 block">{HERO_TEXT.title}</span>
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
-              className="text-gray-400 text-lg max-w-2xl leading-relaxed"
+              className="text-gray-400 text-lg max-w-2xl leading-relaxed pt-2"
             >
               {HERO_TEXT.description}
             </motion.p>

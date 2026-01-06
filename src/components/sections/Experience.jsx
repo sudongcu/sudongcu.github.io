@@ -88,18 +88,25 @@ const Experience = () => {
                     <h3 className="text-2xl font-bold text-white mb-1">
                       {experience.title}
                     </h3>
-                    <p className="text-primary-400 font-medium mb-4">
-                      {experience.company}
-                    </p>
+                    {experience.companyUrl ? (
+                      <a 
+                        href={experience.companyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary-400 font-medium mb-4 inline-block hover:text-primary-300 transition-colors"
+                      >
+                        {experience.company}
+                      </a>
+                    ) : (
+                      <p className="text-primary-400 font-medium mb-4">
+                        {experience.company}
+                      </p>
+                    )}
 
                     {/* Description */}
-                    <ul className="text-gray-400 mb-4 space-y-2 list-disc list-inside">
-                      {experience.description.map((item, idx) => (
-                        <li key={idx} className="leading-relaxed">
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                    <p className="text-gray-400 mb-4 leading-relaxed">
+                      {experience.description}
+                    </p>
 
                     {/* Technologies */}
                     <div className="flex flex-wrap gap-2">
