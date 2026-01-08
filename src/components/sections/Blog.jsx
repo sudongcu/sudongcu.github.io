@@ -45,11 +45,11 @@ const Blog = () => {
   };
 
   return (
-    <section id="blog" className="relative py-20 bg-dark-800">
+    <section id="blog" className="relative py-8 sm:py-12 lg:py-20 bg-dark-800">
       <div className="section-container">
         {/* Section Header */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

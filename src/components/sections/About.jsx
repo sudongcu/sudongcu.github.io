@@ -3,11 +3,11 @@ import { TypeAnimation } from 'react-type-animation';
 
 const About = () => {
   return (
-    <section id="about" className="relative py-20 bg-dark-800">
+    <section id="about" className="relative py-8 sm:py-12 lg:py-20 bg-dark-800">
       <div className="section-container">
         {/* Section Header */}
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-6 sm:mb-8 lg:mb-12"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
