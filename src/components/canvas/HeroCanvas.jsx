@@ -1,7 +1,18 @@
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Html, useProgress } from '@react-three/drei';
 import AnimatedModel from './AnimatedObject';
+
+const Loader = () => {
+  const { progress } = useProgress();
+  return (
+    <Html center>
+      <div className="text-primary-400 text-sm">
+        {progress.toFixed(0)}% loaded
+      </div>
+    </Html>
+  );
+};
 
 const HeroCanvas = () => {
   return (
@@ -29,7 +40,7 @@ const HeroCanvas = () => {
       />
 
       {/* 3D Model */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<Loader />}>
         <AnimatedModel />
       </Suspense>
 
