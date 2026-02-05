@@ -9,7 +9,7 @@ const Navbar = () => {
   const [isLogoHovered, setIsLogoHovered] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
 
-  const fullText = 'D.O.N.G.G.U';
+  const fullText = 'DG.DEV';
 
   useEffect(() => {
     if (isLogoHovered) {
@@ -94,7 +94,7 @@ const Navbar = () => {
               className="flex items-center gap-1 group cursor-pointer"
             >
               <span className="text-primary-400 text-2xl font-mono group-hover:text-primary-300 transition-colors">{'<'}</span>
-              <span className="text-2xl font-bold text-gradient transition-all overflow-hidden inline-block" style={{ width: isLogoHovered ? '142px' : '0px' }}>
+              <span className="text-2xl font-bold text-gradient transition-all overflow-hidden inline-block" style={{ width: isLogoHovered ? '92px' : '0px' }}>
                 {displayedText}
               </span>
               <span className="text-primary-400 text-2xl font-mono group-hover:text-primary-300 transition-colors">{'>'}</span>
