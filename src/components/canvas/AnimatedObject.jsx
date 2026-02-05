@@ -1,7 +1,7 @@
 import { useGLTF } from '@react-three/drei';
 
 const AnimatedModel = () => {
-  const gltf = useGLTF('/models/laptop.glb');
+  const gltf = useGLTF('/models/logo.glb');
 
   if (!gltf || !gltf.scene) {
     console.warn('Model not loaded yet');
@@ -11,14 +11,14 @@ const AnimatedModel = () => {
   return (
     <primitive 
       object={gltf.scene} 
-      scale={0.05} 
-      position={[0, -0.3, 0]}
-      rotation={[0, Math.PI / 4, 0]}
+      scale={0.1} 
+      position={[0, 0, 0]}
+      rotation={[Math.PI / 2, 0, 0.5]}
     />
   );
 };
 
 // Preload the model
-useGLTF.preload('/models/laptop.glb');
+useGLTF.preload('/models/logo.glb');
 
 export default AnimatedModel;
