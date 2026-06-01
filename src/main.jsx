@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import ClipRefine from './pages/privacy/ClipRefine.jsx'
+import ScreenTimer from './pages/privacy/ScreenTimer.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -11,6 +12,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/privacy/cliprefine" element={<ClipRefine />} />
+        <Route path="/privacy/screentimer" element={<ScreenTimer />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
