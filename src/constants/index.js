@@ -94,9 +94,9 @@ export const PROJECTS = [
 
 // Contact Information
 export const CONTACT_INFO = {
-  email: 'sudongcu@gmail.com',
+  email: 'sudongcu.work@gmail.com',
   github: 'https://github.com/sudongcu',
-  linkedin: 'https://linkedin.com/in/sudongcu'
+  linkedin: 'https://www.linkedin.com/in/dongguseo/'
 };
 
 // Hero Section Text
