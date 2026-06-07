@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Smartphone, FlaskConical } from 'lucide-react';
 import Logo from '../../components/Logo';
+import { useSeo } from '../../hooks/useSeo';
 
 const TOOLS = [
   {
@@ -14,6 +15,19 @@ const TOOLS = [
 ];
 
 const Lab = () => {
+  useSeo({
+    title: 'Lab — Free Browser Developer Tools | DG.DEV',
+    description: 'Compact web tools that run entirely in your browser. No signup, no uploads. PhoneFrame mockup generator and more.',
+    path: '/lab',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'DG.DEV Lab',
+      url: 'https://sudongcu.github.io/lab',
+      description: 'Collection of free browser-based developer tools.',
+    },
+  });
+
   return (
     <div className="min-h-screen bg-dark-900 text-white">
       <header className="border-b border-dark-700 bg-dark-800/50 backdrop-blur-sm sticky top-0 z-50">

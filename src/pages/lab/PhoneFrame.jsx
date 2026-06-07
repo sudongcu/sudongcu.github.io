@@ -2,11 +2,31 @@ import { useEffect, useRef, useState } from 'react';
 import { Download, RotateCcw, Smartphone } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import LabLinkButton from '../../components/LabLinkButton';
+import { useSeo } from '../../hooks/useSeo';
 import './phoneframe.css';
 
 const REF_SHORT_SIDE = 390;
 
+const PHONEFRAME_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'PhoneFrame',
+  url: 'https://sudongcu.github.io/lab/phoneframe',
+  applicationCategory: 'DesignApplication',
+  operatingSystem: 'Any (browser)',
+  description: 'Free browser-based tool that wraps a screenshot in an iPhone-style mockup frame and exports as PNG. No upload, no signup — runs entirely in your browser.',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  isAccessibleForFree: true,
+};
+
 const PhoneFrame = () => {
+  useSeo({
+    title: 'PhoneFrame — Free iPhone Mockup Generator | DG.DEV Lab',
+    description: 'Wrap any screenshot in a realistic iPhone-style mockup frame. Free, browser-based, no uploads. Export as PNG in seconds.',
+    path: '/lab/phoneframe',
+    jsonLd: PHONEFRAME_JSON_LD,
+  });
+
   const [imageUrl, setImageUrl] = useState('');
   const [fileName, setFileName] = useState('phone-mockup');
   const [naturalSize, setNaturalSize] = useState({ w: 0, h: 0 });

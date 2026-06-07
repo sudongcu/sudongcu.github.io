@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /lab
+Allow: /lab/
+
+Disallow: /privacy/
+
+Sitemap: https://sudongcu.github.io/sitemap.xml
