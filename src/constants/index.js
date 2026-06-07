@@ -8,6 +8,10 @@ export const NAV_LINKS = [
   { id: 'contact', title: 'Contact', href: '#contact' },
 ];
 
+export const EXTERNAL_NAV_LINKS = [
+  { id: 'lab', title: 'Lab', href: '/lab' },
+];
+
 // Experience Data
 export const EXPERIENCES = [
   {

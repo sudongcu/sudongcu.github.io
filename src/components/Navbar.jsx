@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import { NAV_LINKS } from '../constants';
+import { NAV_LINKS, EXTERNAL_NAV_LINKS } from '../constants';
+import LabLinkButton from './LabLinkButton';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -103,7 +104,7 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+            <div className="ml-10 flex items-center space-x-8">
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.id}
@@ -124,6 +125,12 @@ const Navbar = () => {
                     }`}
                   />
                 </a>
+              ))}
+
+              <span className="h-5 w-px bg-dark-600" aria-hidden="true" />
+
+              {EXTERNAL_NAV_LINKS.map((link) => (
+                <LabLinkButton key={link.id} to={link.href} direction="forward" />
               ))}
             </div>
           </div>
@@ -169,6 +176,17 @@ const Navbar = () => {
               {link.title}
             </a>
           ))}
+          <div className="my-2 border-t border-dark-700" aria-hidden="true" />
+          <div className="px-3 py-1">
+            {EXTERNAL_NAV_LINKS.map((link) => (
+              <LabLinkButton
+                key={link.id}
+                to={link.href}
+                direction="forward"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </nav>
