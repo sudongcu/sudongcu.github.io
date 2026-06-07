@@ -15,6 +15,14 @@ export const EXTERNAL_NAV_LINKS = [
 // Experience Data
 export const EXPERIENCES = [
   {
+    id: 5,
+    title: 'Co-founder & Lead Research Engineer',
+    company: 'SportsDaddy',
+    period: 'Mar 2026 ~ Present (3 months)',
+    description: 'Driving the entire product end-to-end as co-founder. With AI as my daily partner, I single-handedly take care of planning, design, development, QA, and infrastructure.',
+    technologies: ['.NET', 'React', 'Flutter', 'Claude Code', 'AWS', 'MySQL', 'Docker', 'Git', 'Valkey']
+  },
+  {
     id: 1,
     title: 'Team Lead',
     company: 'Green & Grey Inc.',
