@@ -38,9 +38,10 @@ const setJsonLd = (data) => {
   el.textContent = JSON.stringify(data);
 };
 
-export function useSeo({ title, description, path, jsonLd, robots = 'index, follow' }) {
+export function useSeo({ title, description, path, jsonLd, image, robots = 'index, follow' }) {
   useEffect(() => {
     const canonical = `${SITE_ORIGIN}${path}`;
+    const ogImage = image ? `${SITE_ORIGIN}${image}` : null;
 
     if (title) document.title = title;
     if (description) setMeta('meta[name="description"]', 'content', description);
@@ -51,11 +52,13 @@ export function useSeo({ title, description, path, jsonLd, robots = 'index, foll
     if (description) setMeta('meta[property="og:description"]', 'content', description);
     setMeta('meta[property="og:url"]', 'content', canonical);
     setMeta('meta[property="og:type"]', 'content', 'website');
+    if (ogImage) setMeta('meta[property="og:image"]', 'content', ogImage);
 
     setMeta('meta[name="twitter:card"]', 'content', 'summary_large_image');
     if (title) setMeta('meta[name="twitter:title"]', 'content', title);
     if (description) setMeta('meta[name="twitter:description"]', 'content', description);
+    if (ogImage) setMeta('meta[name="twitter:image"]', 'content', ogImage);
 
     setJsonLd(jsonLd ?? null);
-  }, [title, description, path, robots, jsonLd]);
+  }, [title, description, path, robots, jsonLd, image]);
 }

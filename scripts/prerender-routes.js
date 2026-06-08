@@ -23,6 +23,7 @@ const ROUTES = [
     path: '/lab/phoneframe',
     title: 'PhoneFrame — Free iPhone Mockup Generator | DG.DEV Lab',
     description: 'Wrap any screenshot in a realistic iPhone-style mockup frame. Free, browser-based, no uploads. Export as PNG in seconds.',
+    image: '/og-phoneframe.png',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
@@ -39,9 +40,9 @@ const ROUTES = [
 
 const escapeAttr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-function buildHead({ title, description, path, jsonLd }) {
+function buildHead({ title, description, path, jsonLd, image }) {
   const canonical = `${SITE_ORIGIN}${path}`;
-  const ogImage = `${SITE_ORIGIN}/logo.png`;
+  const ogImage = `${SITE_ORIGIN}${image || '/logo.png'}`;
   return `
     <title>${escapeAttr(title)}</title>
     <meta name="description" content="${escapeAttr(description)}" />

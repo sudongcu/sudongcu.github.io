@@ -64,6 +64,22 @@
   color: #000;
 }
 
+.pf-statusbar-off {
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.pf-statusbar-off.pf-text-white {
+  color: #fff;
+}
+
+.pf-statusbar-off.pf-text-black {
+  color: #000;
+}
+
 .pf-time {
   display: inline-block;
   min-width: calc(56px * var(--pf-scale));

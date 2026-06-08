@@ -24,6 +24,7 @@ const PhoneFrame = () => {
     title: 'PhoneFrame — Free iPhone Mockup Generator | DG.DEV Lab',
     description: 'Wrap any screenshot in a realistic iPhone-style mockup frame. Free, browser-based, no uploads. Export as PNG in seconds.',
     path: '/lab/phoneframe',
+    image: '/og-phoneframe.png',
     jsonLd: PHONEFRAME_JSON_LD,
   });
 
@@ -37,6 +38,8 @@ const PhoneFrame = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [statusTime, setStatusTime] = useState('');
   const [statusBarStyle, setStatusBarStyle] = useState('dark');
+  const [showStatusContent, setShowStatusContent] = useState(true);
+  const [overlayTextColor, setOverlayTextColor] = useState('white');
 
   const phoneRef = useRef(null);
   const imgRef = useRef(null);
@@ -200,27 +203,31 @@ const PhoneFrame = () => {
             style={{ '--pf-scale': scale }}
           >
             <div className="pf-screen">
-              {imageUrl && !isLandscape && (
-                <div className={`pf-statusbar pf-statusbar-${statusBarStyle}`}>
-                  <span className="pf-time">{statusTime}</span>
-                  <span className="pf-status-icons">
-                    <svg viewBox="0 0 17 11" fill="currentColor" aria-hidden="true">
-                      <rect x="0" y="8" width="3" height="3" rx="0.5" />
-                      <rect x="5" y="5" width="3" height="6" rx="0.5" />
-                      <rect x="10" y="2" width="3" height="9" rx="0.5" />
-                      <rect x="14" y="0" width="3" height="11" rx="0.5" />
-                    </svg>
-                    <svg viewBox="0 0 16 11" fill="currentColor" aria-hidden="true">
-                      <path d="M8 11a1.2 1.2 0 100-2.4A1.2 1.2 0 008 11z" />
-                      <path d="M3.6 6.6a6 6 0 018.8 0l-1.4 1.4a4 4 0 00-6 0L3.6 6.6z" />
-                      <path d="M.8 3.8a10 10 0 0114.4 0l-1.4 1.4a8 8 0 00-11.6 0L.8 3.8z" />
-                    </svg>
-                    <svg viewBox="0 0 26 11" fill="none" aria-hidden="true">
-                      <rect x="0.5" y="0.5" width="22" height="10" rx="2.5" stroke="currentColor" opacity="0.5" />
-                      <rect x="2" y="2" width="19" height="7" rx="1.2" fill="currentColor" />
-                      <rect x="23" y="3.5" width="1.8" height="4" rx="0.6" fill="currentColor" opacity="0.5" />
-                    </svg>
-                  </span>
+              {imageUrl && !isLandscape && (statusBarStyle !== 'off' || showStatusContent) && (
+                <div className={`pf-statusbar pf-statusbar-${statusBarStyle}${statusBarStyle === 'off' ? ` pf-text-${overlayTextColor}` : ''}`}>
+                  {showStatusContent && (
+                    <>
+                      <span className="pf-time">{statusTime}</span>
+                      <span className="pf-status-icons">
+                        <svg viewBox="0 0 17 11" fill="currentColor" aria-hidden="true">
+                          <rect x="0" y="8" width="3" height="3" rx="0.5" />
+                          <rect x="5" y="5" width="3" height="6" rx="0.5" />
+                          <rect x="10" y="2" width="3" height="9" rx="0.5" />
+                          <rect x="14" y="0" width="3" height="11" rx="0.5" />
+                        </svg>
+                        <svg viewBox="0 0 16 11" fill="currentColor" aria-hidden="true">
+                          <path d="M8 11a1.2 1.2 0 100-2.4A1.2 1.2 0 008 11z" />
+                          <path d="M3.6 6.6a6 6 0 018.8 0l-1.4 1.4a4 4 0 00-6 0L3.6 6.6z" />
+                          <path d="M.8 3.8a10 10 0 0114.4 0l-1.4 1.4a8 8 0 00-11.6 0L.8 3.8z" />
+                        </svg>
+                        <svg viewBox="0 0 26 11" fill="none" aria-hidden="true">
+                          <rect x="0.5" y="0.5" width="22" height="10" rx="2.5" stroke="currentColor" opacity="0.5" />
+                          <rect x="2" y="2" width="19" height="7" rx="1.2" fill="currentColor" />
+                          <rect x="23" y="3.5" width="1.8" height="4" rx="0.6" fill="currentColor" opacity="0.5" />
+                        </svg>
+                      </span>
+                    </>
+                  )}
                 </div>
               )}
               {imageUrl && (
@@ -241,32 +248,103 @@ const PhoneFrame = () => {
         </div>
 
         {imageUrl && !isLandscape && (
-          <div className="flex items-center gap-3 text-sm">
-            <span className="text-gray-400">Status bar</span>
-            <div className="inline-flex rounded-md border border-dark-600 overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setStatusBarStyle('dark')}
-                className={`px-3 py-1.5 transition-colors ${
-                  statusBarStyle === 'dark'
-                    ? 'bg-dark-600 text-white'
-                    : 'text-gray-400 hover:bg-dark-700 hover:text-white'
-                }`}
-              >
-                Dark
-              </button>
-              <button
-                type="button"
-                onClick={() => setStatusBarStyle('light')}
-                className={`px-3 py-1.5 transition-colors border-l border-dark-600 ${
-                  statusBarStyle === 'light'
-                    ? 'bg-dark-600 text-white'
-                    : 'text-gray-400 hover:bg-dark-700 hover:text-white'
-                }`}
-              >
-                Light
-              </button>
+          <div className="flex flex-col gap-3 text-sm">
+            <div className="flex items-center gap-3">
+              <span className="text-gray-400 min-w-[7rem]">Tint</span>
+              <div className="inline-flex rounded-md border border-dark-600 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setStatusBarStyle('dark')}
+                  className={`px-3 py-1.5 transition-colors ${
+                    statusBarStyle === 'dark'
+                      ? 'bg-dark-600 text-white'
+                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
+                  }`}
+                >
+                  Dark
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatusBarStyle('light')}
+                  className={`px-3 py-1.5 transition-colors border-l border-dark-600 ${
+                    statusBarStyle === 'light'
+                      ? 'bg-dark-600 text-white'
+                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
+                  }`}
+                >
+                  Light
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatusBarStyle('off')}
+                  className={`px-3 py-1.5 transition-colors border-l border-dark-600 ${
+                    statusBarStyle === 'off'
+                      ? 'bg-dark-600 text-white'
+                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
+                  }`}
+                >
+                  Off
+                </button>
+              </div>
             </div>
+
+            <div className="flex items-center gap-3">
+              <span className="text-gray-400 min-w-[7rem]">Time & icons</span>
+              <div className="inline-flex rounded-md border border-dark-600 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setShowStatusContent(true)}
+                  className={`px-3 py-1.5 transition-colors ${
+                    showStatusContent
+                      ? 'bg-dark-600 text-white'
+                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
+                  }`}
+                >
+                  On
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowStatusContent(false)}
+                  className={`px-3 py-1.5 transition-colors border-l border-dark-600 ${
+                    !showStatusContent
+                      ? 'bg-dark-600 text-white'
+                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
+                  }`}
+                >
+                  Off
+                </button>
+              </div>
+            </div>
+
+            {statusBarStyle === 'off' && showStatusContent && (
+              <div className="flex items-center gap-3">
+                <span className="text-gray-400 min-w-[7rem]">Text color</span>
+                <div className="inline-flex rounded-md border border-dark-600 overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setOverlayTextColor('white')}
+                    className={`px-3 py-1.5 transition-colors ${
+                      overlayTextColor === 'white'
+                        ? 'bg-dark-600 text-white'
+                        : 'text-gray-400 hover:bg-dark-700 hover:text-white'
+                    }`}
+                  >
+                    White
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOverlayTextColor('black')}
+                    className={`px-3 py-1.5 transition-colors border-l border-dark-600 ${
+                      overlayTextColor === 'black'
+                        ? 'bg-dark-600 text-white'
+                        : 'text-gray-400 hover:bg-dark-700 hover:text-white'
+                    }`}
+                  >
+                    Black
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
