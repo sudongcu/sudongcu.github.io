@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Smartphone, FlaskConical } from 'lucide-react';
+import { Smartphone, FlaskConical } from 'lucide-react';
 import Logo from '../../components/Logo';
 import { useSeo } from '../../hooks/useSeo';
 
@@ -10,6 +10,7 @@ const TOOLS = [
     title: 'PhoneFrame',
     description: 'Upload an image to wrap it in a phone mockup frame and download as PNG. Auto-detects portrait or landscape.',
     icon: Smartphone,
+    thumbnail: '/labs/phoneframe.png',
     tags: ['Image', 'Mockup', 'Export'],
   },
 ];
@@ -67,29 +68,42 @@ const Lab = () => {
               >
                 <Link
                   to={`/lab/${tool.slug}`}
-                  className="group block h-full bg-dark-700 hover:bg-dark-600/80 border border-dark-600 hover:border-primary-500/40 rounded-xl p-6 transition-all"
+                  className="group block h-full bg-dark-700 hover:bg-dark-600/80 border border-dark-600 hover:border-primary-500/40 rounded-xl overflow-hidden transition-all"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/20 transition-colors">
-                      <Icon className="w-6 h-6" />
+                  {tool.thumbnail ? (
+                    <div className="relative aspect-[2/1] bg-dark-800 overflow-hidden">
+                      <img
+                        src={tool.thumbnail}
+                        alt={`${tool.title} preview`}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                      />
                     </div>
-                    <ArrowRight className="w-5 h-5 text-gray-500 group-hover:text-primary-400 group-hover:translate-x-1 transition-all" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-primary-400 transition-colors">
-                    {tool.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                    {tool.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {tool.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2.5 py-1 bg-dark-800 text-gray-400 text-xs rounded-md"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                  ) : null}
+                  <div className="p-6">
+                    {!tool.thumbnail && (
+                      <div className="mb-4">
+                        <div className="w-12 h-12 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/20 transition-colors">
+                          <Icon className="w-6 h-6" />
+                        </div>
+                      </div>
+                    )}
+                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary-400 transition-colors">
+                      {tool.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                      {tool.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {tool.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2.5 py-1 bg-dark-800 text-gray-400 text-xs rounded-md"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </Link>
               </motion.div>

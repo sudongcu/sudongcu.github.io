@@ -23,7 +23,7 @@ const ROUTES = [
     path: '/lab/phoneframe',
     title: 'PhoneFrame — Free iPhone Mockup Generator | DG.DEV Lab',
     description: 'Wrap any screenshot in a realistic iPhone-style mockup frame. Free, browser-based, no uploads. Export as PNG in seconds.',
-    image: '/og-phoneframe.png',
+    image: '/labs/phoneframe.png',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
