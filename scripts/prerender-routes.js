@@ -20,6 +20,23 @@ const ROUTES = [
     },
   },
   {
+    path: '/lab/gemini-watermark-remover',
+    title: 'Gemini Watermark Remover — Free AI Image Cleanup | DG.DEV Lab',
+    description: 'Remove the Gemini / Nano Banana watermark from AI-generated images in seconds. Free, browser-based, no uploads — your image never leaves your device.',
+    image: '/labs/gemini-watermark-remover.png',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Gemini Watermark Remover',
+      url: `${SITE_ORIGIN}/lab/gemini-watermark-remover`,
+      applicationCategory: 'MultimediaApplication',
+      operatingSystem: 'Any (browser)',
+      description: 'Free browser-based tool that removes the visible Gemini / Nano Banana watermark from AI-generated images using inpainting.',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      isAccessibleForFree: true,
+    },
+  },
+  {
     path: '/lab/phoneframe',
     title: 'PhoneFrame — Free iPhone Mockup Generator | DG.DEV Lab',
     description: 'Wrap any screenshot in a realistic iPhone-style mockup frame. Free, browser-based, no uploads. Export as PNG in seconds.',

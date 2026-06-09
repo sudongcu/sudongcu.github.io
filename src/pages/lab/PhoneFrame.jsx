@@ -126,7 +126,7 @@ const PhoneFrame = () => {
       });
       const a = document.createElement('a');
       a.href = dataUrl;
-      a.download = `${fileName}-phone.png`;
+      a.download = `${fileName}-dgdev-phone.png`;
       a.click();
     } catch (err) {
       console.error(err);

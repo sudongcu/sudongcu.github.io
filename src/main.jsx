@@ -7,6 +7,7 @@ import ClipRefine from './pages/privacy/ClipRefine.jsx'
 import ScreenTimer from './pages/privacy/ScreenTimer.jsx'
 import Lab from './pages/lab/index.jsx'
 import PhoneFrame from './pages/lab/PhoneFrame.jsx'
+import GeminiWatermarkRemover from './pages/lab/GeminiWatermarkRemover.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/privacy/screentimer" element={<ScreenTimer />} />
         <Route path="/lab" element={<Lab />} />
         <Route path="/lab/phoneframe" element={<PhoneFrame />} />
+        <Route path="/lab/gemini-watermark-remover" element={<GeminiWatermarkRemover />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
