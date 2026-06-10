@@ -32,7 +32,7 @@ const Lab = () => {
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
       name: 'DG.DEV Lab',
-      url: 'https://sudongcu.github.io/lab',
+      url: 'https://sudongcu.github.io/lab/',
       description: 'Collection of free browser-based developer tools.',
     },
   });

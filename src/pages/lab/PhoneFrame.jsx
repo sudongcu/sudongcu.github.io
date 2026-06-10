@@ -11,7 +11,7 @@ const PHONEFRAME_JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
   name: 'PhoneFrame',
-  url: 'https://sudongcu.github.io/lab/phoneframe',
+  url: 'https://sudongcu.github.io/lab/phoneframe/',
   applicationCategory: 'DesignApplication',
   operatingSystem: 'Any (browser)',
   description: 'Free browser-based tool that wraps a screenshot in an iPhone-style mockup frame and exports as PNG. No upload, no signup — runs entirely in your browser.',

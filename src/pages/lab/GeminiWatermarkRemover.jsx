@@ -8,7 +8,7 @@ const SEO_JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
   name: 'Gemini Watermark Remover',
-  url: 'https://sudongcu.github.io/lab/gemini-watermark-remover',
+  url: 'https://sudongcu.github.io/lab/gemini-watermark-remover/',
   applicationCategory: 'MultimediaApplication',
   operatingSystem: 'Any (browser)',
   description: 'Free browser-based tool that removes the visible Gemini / Nano Banana watermark from AI-generated images using inpainting. Works entirely in your browser — no upload, no signup.',
