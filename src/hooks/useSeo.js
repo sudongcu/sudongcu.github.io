@@ -38,9 +38,11 @@ const setJsonLd = (data) => {
   el.textContent = JSON.stringify(data);
 };
 
+const withTrailingSlash = (p) => (p.endsWith('/') ? p : `${p}/`);
+
 export function useSeo({ title, description, path, jsonLd, image, robots = 'index, follow' }) {
   useEffect(() => {
-    const canonical = `${SITE_ORIGIN}${path}`;
+    const canonical = `${SITE_ORIGIN}${withTrailingSlash(path)}`;
     const ogImage = image ? `${SITE_ORIGIN}${image}` : null;
 
     if (title) document.title = title;

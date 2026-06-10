@@ -6,6 +6,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, '..', 'dist');
 const SITE_ORIGIN = 'https://sudongcu.github.io';
 
+const withTrailingSlash = (p) => (p.endsWith('/') ? p : `${p}/`);
+const url = (p) => `${SITE_ORIGIN}${withTrailingSlash(p)}`;
+
 const ROUTES = [
   {
     path: '/lab',
@@ -15,7 +18,7 @@ const ROUTES = [
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
       name: 'DG.DEV Lab',
-      url: `${SITE_ORIGIN}/lab`,
+      url: url('/lab'),
       description: 'Collection of free browser-based developer tools.',
     },
   },
@@ -28,7 +31,7 @@ const ROUTES = [
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
       name: 'Gemini Watermark Remover',
-      url: `${SITE_ORIGIN}/lab/gemini-watermark-remover`,
+      url: url('/lab/gemini-watermark-remover'),
       applicationCategory: 'MultimediaApplication',
       operatingSystem: 'Any (browser)',
       description: 'Free browser-based tool that removes the visible Gemini / Nano Banana watermark from AI-generated images using inpainting.',
@@ -45,7 +48,7 @@ const ROUTES = [
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
       name: 'PhoneFrame',
-      url: `${SITE_ORIGIN}/lab/phoneframe`,
+      url: url('/lab/phoneframe'),
       applicationCategory: 'DesignApplication',
       operatingSystem: 'Any (browser)',
       description: 'Free browser-based tool that wraps a screenshot in an iPhone-style mockup frame and exports as PNG.',
@@ -58,7 +61,7 @@ const ROUTES = [
 const escapeAttr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 function buildHead({ title, description, path, jsonLd, image }) {
-  const canonical = `${SITE_ORIGIN}${path}`;
+  const canonical = url(path);
   const ogImage = `${SITE_ORIGIN}${image || '/logo.png'}`;
   return `
     <title>${escapeAttr(title)}</title>
