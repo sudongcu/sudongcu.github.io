@@ -3,5 +3,8 @@ Allow: /lab
 Allow: /lab/
 
 Disallow: /privacy/
+Disallow: /terms/
+Disallow: /projects/
+Disallow: /models/
 
 Sitemap: https://sudongcu.github.io/sitemap.xml
