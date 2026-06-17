@@ -1,311 +1,384 @@
 import { motion } from 'framer-motion';
-import { Shield, Lock, Database, Eye, Users, Mail, FileText } from 'lucide-react';
 
 const ClipRefine = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
-      {/* Header */}
-      <motion.header 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-50"
-      >
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <Shield className="w-8 h-8 text-blue-400" />
-            <div>
-              <h1 className="text-3xl font-bold text-white">Privacy Policy</h1>
-              <p className="text-gray-400 text-sm">ClipRefine Chrome Extension</p>
-            </div>
-          </div>
-          <div className="mt-4 flex gap-4 text-sm text-gray-400">
-            <span>Last Updated: February 2025</span>
-            <span>•</span>
-            <span>Version: Beta (0.9.x)</span>
-          </div>
-        </div>
-      </motion.header>
+    <div className="min-h-screen bg-gray-50 text-[#120d1b] font-[Manrope,sans-serif]">
 
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        {/* Overview */}
-        <Section icon={FileText} title="Overview">
-          <p className="text-gray-300 leading-relaxed">
-            ClipRefine is a Chrome extension that processes clipboard text locally in your browser. 
+      {/* Top bar */}
+      <div className="bg-white border-b border-[#d7cfe7]">
+        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center gap-3">
+          <img
+            src="/logo/cliprefine-logo.png"
+            alt="ClipRefine"
+            className="w-8 h-8 rounded-lg shadow-md"
+          />
+          <span className="font-black text-lg text-[#6B40C8]">ClipRefine</span>
+        </div>
+      </div>
+
+      {/* Header */}
+      <header className="max-w-4xl mx-auto px-6 pt-12 pb-8">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <h1 className="text-5xl font-black mb-4 leading-tight">Privacy Policy</h1>
+          <div className="flex gap-3 text-sm text-gray-500">
+            <span>v1.0.0</span>
+            <span>·</span>
+            <span>Last updated: June 13, 2026</span>
+          </div>
+        </motion.div>
+      </header>
+
+      {/* Body */}
+      <main className="max-w-4xl mx-auto px-6 pb-20">
+        {/* Intro */}
+        <Card>
+          <p className="text-gray-700 leading-relaxed">
+            ClipRefine is a Chrome extension that processes clipboard text locally in your browser.
             We are committed to protecting your privacy and being transparent about our data practices.
           </p>
-        </Section>
-
-        {/* Data Collection */}
-        <Section icon={Database} title="Data Collection">
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-semibold text-red-400 mb-4 flex items-center gap-2">
-                <Eye className="w-5 h-5" />
-                What We DO NOT Collect
-              </h3>
-              <ul className="space-y-3">
-                <InfoItem 
-                  title="Clipboard Content" 
-                  description="All text processing happens entirely within your browser. Your copied text is never sent to any external server."
-                />
-                <InfoItem 
-                  title="Browsing History" 
-                  description="We do not track or store which websites you visit."
-                />
-                <InfoItem 
-                  title="Personal Information" 
-                  description="We do not collect names, emails, or any personally identifiable information."
-                />
-                <InfoItem 
-                  title="Usage Analytics" 
-                  description="We do not use any analytics or tracking services."
-                />
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold text-green-400 mb-4 flex items-center gap-2">
-                <Database className="w-5 h-5" />
-                What We Store Locally
-              </h3>
-              <p className="text-gray-300 mb-4">
-                The following data is stored locally in your browser using Chrome's Storage Sync API:
-              </p>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-800">
-                      <th className="border border-gray-700 px-4 py-2 text-left">Data</th>
-                      <th className="border border-gray-700 px-4 py-2 text-left">Purpose</th>
-                      <th className="border border-gray-700 px-4 py-2 text-left">Storage Location</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="bg-gray-900/50">
-                      <td className="border border-gray-700 px-4 py-2">User-created rules</td>
-                      <td className="border border-gray-700 px-4 py-2">To apply text transformations</td>
-                      <td className="border border-gray-700 px-4 py-2">Chrome Storage Sync</td>
-                    </tr>
-                    <tr className="bg-gray-900/30">
-                      <td className="border border-gray-700 px-4 py-2">Extension settings</td>
-                      <td className="border border-gray-700 px-4 py-2">To remember your preferences</td>
-                      <td className="border border-gray-700 px-4 py-2">Chrome Storage Sync</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-gray-400 text-sm mt-3 italic">
-                This data syncs across your Chrome browsers if you are signed into Chrome, but is never accessible to us or any third party.
-              </p>
-            </div>
-          </div>
-        </Section>
-
-        {/* Permissions */}
-        <Section icon={Lock} title="Permissions Explained">
-          <p className="text-gray-300 mb-4">ClipRefine requires the following permissions:</p>
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gray-800">
-                  <th className="border border-gray-700 px-4 py-2 text-left">Permission</th>
-                  <th className="border border-gray-700 px-4 py-2 text-left">Why We Need It</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-gray-900/50">
-                  <td className="border border-gray-700 px-4 py-2 font-mono text-sm">storage</td>
-                  <td className="border border-gray-700 px-4 py-2">To save your rules and settings</td>
-                </tr>
-                <tr className="bg-gray-900/30">
-                  <td className="border border-gray-700 px-4 py-2 font-mono text-sm">activeTab</td>
-                  <td className="border border-gray-700 px-4 py-2">To detect the current website for domain-specific rules</td>
-                </tr>
-                <tr className="bg-gray-900/50">
-                  <td className="border border-gray-700 px-4 py-2 font-mono text-sm">clipboardWrite</td>
-                  <td className="border border-gray-700 px-4 py-2">To write refined text back to your clipboard</td>
-                </tr>
-                <tr className="bg-gray-900/30">
-                  <td className="border border-gray-700 px-4 py-2 font-mono text-sm">host_permissions (&lt;all_urls&gt;)</td>
-                  <td className="border border-gray-700 px-4 py-2">To run the content script on all websites where you copy text</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </Section>
-
-        {/* Data Processing */}
-        <Section icon={Shield} title="Data Processing">
-          <ul className="space-y-2 text-gray-300">
-            <li className="flex items-start gap-2">
-              <span className="text-green-400 mt-1">✓</span>
-              <span>All text processing occurs <strong className="text-white">locally</strong> in your browser</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-green-400 mt-1">✓</span>
-              <span>No data is transmitted to external servers</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-green-400 mt-1">✓</span>
-              <span>No third-party services are used for text processing</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-green-400 mt-1">✓</span>
-              <span>Your clipboard content remains completely private</span>
-            </li>
-          </ul>
-        </Section>
-
-        {/* Third-Party Services */}
-        <Section icon={Users} title="Third-Party Services">
-          <p className="text-gray-300">
-            This extension does not connect to any third-party services. All processing happens locally in your browser.
+          <p className="text-gray-700 leading-relaxed mt-3">
+            <strong>FREE version</strong> operates 100% offline with zero external requests.{' '}
+            <strong>PRO version</strong> uses Lemon Squeezy for payment processing and license validation —
+            see the "Third-Party Services" section below for details.
           </p>
+        </Card>
+
+        {/* 1. Data Collection */}
+        <Section number="1" title="Data Collection" icon="database">
+          <SubSection title="What We DO NOT Collect">
+            <ul className="space-y-2">
+              <Bullet negative>
+                <strong>Clipboard content</strong> — All text processing happens entirely within your browser. Your copied text is never sent to any external server.
+              </Bullet>
+              <Bullet negative>
+                <strong>Browsing history</strong> — We do not track or store which websites you visit.
+              </Bullet>
+              <Bullet negative>
+                <strong>Personal information</strong> — ClipRefine itself does not collect names, emails, or personal info. PRO purchases are processed by Lemon Squeezy who collects payment-related data on their own platform — see Third-Party Services.
+              </Bullet>
+              <Bullet negative>
+                <strong>Usage analytics</strong> — We do not use any analytics or tracking services.
+              </Bullet>
+            </ul>
+          </SubSection>
+
+          <SubSection title="What We Store Locally">
+            <p className="text-gray-700 mb-3">
+              The following data is stored locally in your browser using Chrome's Storage Sync API:
+            </p>
+            <DataTable
+              headers={['Data', 'Purpose', 'Storage Location']}
+              rows={[
+                ['User-created rules', 'To apply text transformations', 'Chrome Storage Sync'],
+                ['Extension settings', 'To remember your preferences', 'Chrome Storage Sync'],
+                ['License key (PRO only)', 'To unlock PRO features and revalidate license', 'Chrome Storage Sync'],
+                ['Anonymous device ID (UUID)', 'Generated locally for license activation tracking', 'Chrome Storage Sync'],
+                ['License instance ID', 'Returned by Lemon Squeezy after activation', 'Chrome Storage Sync'],
+              ]}
+            />
+            <p className="text-gray-500 text-sm mt-3 italic">
+              This data syncs across your Chrome browsers if you are signed into Chrome, but is never accessible to us or any third party.
+            </p>
+          </SubSection>
         </Section>
 
-        {/* Data Security */}
-        <Section icon={Lock} title="Data Security">
-          <ul className="space-y-2 text-gray-300">
-            <li className="flex items-start gap-2">
-              <span className="text-blue-400 mt-1">•</span>
-              <span>All data is stored using Chrome's secure Storage API</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-400 mt-1">•</span>
-              <span>No external database or server stores your information</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-400 mt-1">•</span>
-              <span>Your rules and settings are encrypted in transit when syncing across Chrome browsers</span>
-            </li>
+        {/* 2. Permissions */}
+        <Section number="2" title="Permissions Explained" icon="lock">
+          <p className="text-gray-700 mb-4">ClipRefine requires the following permissions:</p>
+          <DataTable
+            headers={['Permission', 'Why We Need It']}
+            rows={[
+              ['storage', 'To save your rules and settings'],
+              ['activeTab', 'To detect the current website for domain-specific rules'],
+              ['clipboardWrite', 'To write refined text back to your clipboard'],
+              ['host_permissions (<all_urls>)', 'To run the content script on all websites where you copy text'],
+              ['alarms', 'To schedule periodic license re-validation (every 24 hours, PRO only)'],
+            ]}
+            monoFirstColumn
+          />
+        </Section>
+
+        {/* 3. Data Processing */}
+        <Section number="3" title="Data Processing" icon="settings">
+          <SubSection title="FREE Version">
+            <ul className="space-y-2">
+              <Bullet>All text processing occurs <strong>locally</strong> in your browser</Bullet>
+              <Bullet><strong>Zero external network requests</strong></Bullet>
+              <Bullet>Your clipboard content never leaves your device</Bullet>
+            </ul>
+          </SubSection>
+          <SubSection title="PRO Version">
+            <ul className="space-y-2">
+              <Bullet>Clipboard text processing remains <strong>100% local</strong> — never sent anywhere</Bullet>
+              <Bullet>License key + anonymous device ID sent to Lemon Squeezy on activation/deactivation</Bullet>
+              <Bullet>Automatic license re-validation every 24 hours (detects refunds/cancellations)</Bullet>
+            </ul>
+          </SubSection>
+        </Section>
+
+        {/* 4. Third-Party Services */}
+        <Section number="4" title="Third-Party Services" icon="groups">
+          <p className="text-gray-700 mb-4">
+            ClipRefine's <strong>FREE version</strong> does not connect to any third-party services.
+          </p>
+          <Callout>
+            <p className="font-bold text-[#6B40C8] mb-3 text-lg">
+              Lemon Squeezy (PRO version only)
+            </p>
+            <p className="text-gray-700 mb-3">
+              We use Lemon Squeezy for payment processing and license management. They act as the Merchant of Record.
+            </p>
+            <ul className="space-y-2">
+              <Bullet><strong>What's shared:</strong> Your email (at checkout), payment info (handled by them, never by us), license key, anonymous device identifier</Bullet>
+              <Bullet><strong>When triggered:</strong> Only when you purchase PRO, activate/deactivate license, or during 24-hour re-validation</Bullet>
+              <Bullet><strong>Tax handling:</strong> Lemon Squeezy automatically calculates and remits VAT/GST for your region</Bullet>
+              <Bullet><strong>Compliance:</strong> GDPR and CCPA compliant</Bullet>
+              <Bullet>
+                <strong>Their Privacy Policy:</strong>{' '}
+                <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener noreferrer"
+                   className="text-[#6B40C8] underline hover:no-underline">
+                  lemonsqueezy.com/privacy
+                </a>
+              </Bullet>
+            </ul>
+          </Callout>
+        </Section>
+
+        {/* 5. Data Security */}
+        <Section number="5" title="Data Security" icon="security">
+          <ul className="space-y-2">
+            <Bullet>All data is stored using Chrome's secure Storage API</Bullet>
+            <Bullet>No external database or server stores your information</Bullet>
+            <Bullet>Your rules and settings are encrypted in transit when syncing across Chrome browsers</Bullet>
           </ul>
         </Section>
 
-        {/* Your Rights */}
-        <Section icon={Users} title="Your Rights">
-          <p className="text-gray-300 mb-4">You have full control over your data:</p>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-              <h4 className="font-semibold text-blue-400 mb-2">View</h4>
-              <p className="text-gray-300 text-sm">Access your rules and settings through the extension options page</p>
-            </div>
-            <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-              <h4 className="font-semibold text-red-400 mb-2">Delete</h4>
-              <p className="text-gray-300 text-sm">Remove all data by uninstalling the extension or clearing extension data in Chrome settings</p>
-            </div>
+        {/* 6. Your Rights */}
+        <Section number="6" title="Your Rights" icon="account_circle">
+          <p className="text-gray-700 mb-4">You have full control over your data:</p>
+          <div className="grid md:grid-cols-3 gap-4">
+            <RightCard title="View" color="purple">
+              Access your rules and settings through the extension options page
+            </RightCard>
+            <RightCard title="Deactivate License (PRO)" color="purple">
+              Remove your PRO license from this device via "Deactivate License" in extension settings
+            </RightCard>
+            <RightCard title="Delete" color="red">
+              Remove all data by uninstalling the extension or clearing extension data in Chrome settings
+            </RightCard>
           </div>
         </Section>
 
-        {/* Children's Privacy */}
-        <Section title="Children's Privacy">
-          <p className="text-gray-300">
+        {/* 7. Refunds & Subscriptions */}
+        <Section number="7" title="Refunds & Subscriptions" icon="payments">
+          <ul className="space-y-2">
+            <Bullet>ClipRefine PRO is a <strong>one-time lifetime purchase</strong> — no subscriptions, no recurring charges</Bullet>
+            <Bullet>Refunds are processed by Lemon Squeezy. You can request a refund directly through the "View order" link in your purchase receipt email.</Bullet>
+            <Bullet>Refunded licenses are automatically deactivated within 24 hours (next license re-validation cycle)</Bullet>
+          </ul>
+        </Section>
+
+        {/* 8. Children's Privacy */}
+        <Section number="8" title="Children's Privacy" icon="child_care">
+          <p className="text-gray-700">
             ClipRefine does not knowingly collect any information from children under 13 years of age.
           </p>
         </Section>
 
-        {/* Changes to This Policy */}
-        <Section title="Changes to This Policy">
-          <p className="text-gray-300 mb-3">
+        {/* 9. Changes to This Policy */}
+        <Section number="9" title="Changes to This Policy" icon="edit">
+          <p className="text-gray-700 mb-3">
             We may update this privacy policy when new features are added. Significant changes will be communicated through:
           </p>
-          <ul className="space-y-2 text-gray-300">
-            <li className="flex items-start gap-2">
-              <span className="text-blue-400 mt-1">•</span>
-              <span>Extension update notes</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-400 mt-1">•</span>
-              <span>In-app notification</span>
-            </li>
+          <ul className="space-y-2">
+            <Bullet>Extension update notes</Bullet>
+            <Bullet>In-app notification</Bullet>
           </ul>
         </Section>
 
-        {/* Contact */}
-        <Section icon={Mail} title="Contact">
-          <p className="text-gray-300 mb-4">
-            If you have any questions about this privacy policy, please contact us:
-          </p>
-          <div className="space-y-2">
-            <div className="text-gray-300">
-              <span className="font-semibold">Email:</span> sudongcu.work@gmail.com
-            </div>
-          </div>
-        </Section>
-
-        {/* Summary */}
-        <Section title="Summary">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gray-800">
-                  <th className="border border-gray-700 px-4 py-2 text-left">Question</th>
-                  <th className="border border-gray-700 px-4 py-2 text-left">Answer</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-gray-900/50">
-                  <td className="border border-gray-700 px-4 py-2">Do we collect your clipboard data?</td>
-                  <td className="border border-gray-700 px-4 py-2 font-bold text-green-400">No</td>
-                </tr>
-                <tr className="bg-gray-900/30">
-                  <td className="border border-gray-700 px-4 py-2">Do we track your browsing?</td>
-                  <td className="border border-gray-700 px-4 py-2 font-bold text-green-400">No</td>
-                </tr>
-                <tr className="bg-gray-900/50">
-                  <td className="border border-gray-700 px-4 py-2">Do we use analytics?</td>
-                  <td className="border border-gray-700 px-4 py-2 font-bold text-green-400">No</td>
-                </tr>
-                <tr className="bg-gray-900/30">
-                  <td className="border border-gray-700 px-4 py-2">Is your data sent to servers?</td>
-                  <td className="border border-gray-700 px-4 py-2 font-bold text-green-400">No</td>
-                </tr>
-                <tr className="bg-gray-900/50">
-                  <td className="border border-gray-700 px-4 py-2">Where is data stored?</td>
-                  <td className="border border-gray-700 px-4 py-2 font-bold text-blue-400">Locally in your browser</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        {/* 10. Summary */}
+        <Section number="10" title="Summary" icon="check_circle">
+          <SummaryTable
+            rows={[
+              ['Do we collect your clipboard data?', 'No — always local', 'good'],
+              ['Do we track your browsing?', 'No', 'good'],
+              ['Do we use analytics?', 'No', 'good'],
+              ['Does FREE version send any data externally?', 'No — 100% offline', 'good'],
+              ['Does PRO version send data externally?', 'Only license key + anonymous device ID, to Lemon Squeezy', 'neutral'],
+              ['Who handles PRO payments?', 'Lemon Squeezy (Merchant of Record)', 'neutral'],
+              ['Where is data stored?', 'Locally in Chrome Storage Sync', 'neutral'],
+            ]}
+          />
         </Section>
 
         {/* Footer */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm italic"
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-16 pt-8 border-t border-[#d7cfe7] text-center text-sm text-gray-500"
         >
-          <p>This privacy policy is effective as of the date stated above.</p>
+          <p>This privacy policy is effective as of June 13, 2026.</p>
+          <p className="mt-2">
+            Questions? Email{' '}
+            <a href="mailto:sudongcu.work@gmail.com" className="text-[#6B40C8] underline hover:no-underline">
+              sudongcu.work@gmail.com
+            </a>
+            {' · '}
+            See{' '}
+            <a href="/terms/cliprefine" className="text-[#6B40C8] underline hover:no-underline">
+              Terms of Service
+            </a>
+          </p>
         </motion.div>
       </main>
     </div>
   );
 };
 
-// Helper Components
-const Section = ({ icon: Icon, title, children }) => (
+// ────────────────────────────────────────────────
+// Reusable components
+// ────────────────────────────────────────────────
+
+const Card = ({ children }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.4 }}
+    className="bg-white rounded-2xl border border-[#d7cfe7] p-6 mb-6 shadow-sm"
+  >
+    {children}
+  </motion.div>
+);
+
+const Section = ({ number, title, icon, children }) => (
   <motion.section
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.5 }}
-    className="mb-12"
+    transition={{ duration: 0.4 }}
+    className="mb-8"
   >
-    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
-      {Icon && <Icon className="w-6 h-6 text-blue-400" />}
-      {title}
-    </h2>
-    <div className="bg-gray-800/30 rounded-lg p-6 border border-gray-700">
+    <div className="flex items-center gap-3 mb-5">
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#6B40C8]/10">
+        <span className="material-symbols-outlined text-[22px] text-[#6B40C8]">{icon}</span>
+      </div>
+      <div className="flex items-baseline gap-3">
+        <span className="text-sm font-bold text-gray-400">#{number}</span>
+        <h2 className="text-2xl font-black">{title}</h2>
+      </div>
+    </div>
+    <div className="bg-white rounded-2xl border border-[#d7cfe7] p-6 shadow-sm">
       {children}
     </div>
   </motion.section>
 );
 
-const InfoItem = ({ title, description }) => (
-  <li className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-    <h4 className="font-semibold text-white mb-1">{title}:</h4>
-    <p className="text-gray-300 text-sm">{description}</p>
+const SubSection = ({ title, children }) => (
+  <div className="mb-5 last:mb-0">
+    <h3 className="font-bold text-[#6B40C8] mb-3">{title}</h3>
+    {children}
+  </div>
+);
+
+const Bullet = ({ children, negative = false }) => (
+  <li className="flex items-start gap-2 text-gray-700">
+    <span className={`material-symbols-outlined text-[18px] mt-0.5 flex-shrink-0 ${
+      negative ? 'text-red-500' : 'text-[#6B40C8]'
+    }`}>
+      {negative ? 'block' : 'check_circle'}
+    </span>
+    <span>{children}</span>
   </li>
+);
+
+const Callout = ({ children }) => (
+  <div className="mt-4 rounded-xl border p-5 bg-[#6B40C8]/5 border-[#6B40C8]/20">
+    {children}
+  </div>
+);
+
+const RightCard = ({ title, color, children }) => {
+  const colorClasses = {
+    purple: 'border-[#d7cfe7] text-[#6B40C8]',
+    red: 'border-red-200 text-red-600',
+  };
+  return (
+    <div className={`bg-gray-50 rounded-xl border p-4 ${colorClasses[color]}`}>
+      <h4 className="font-bold mb-2">{title}</h4>
+      <p className="text-gray-700 text-sm">{children}</p>
+    </div>
+  );
+};
+
+const DataTable = ({ headers, rows, monoFirstColumn = false }) => (
+  <div className="overflow-x-auto rounded-xl border border-[#d7cfe7]">
+    <table className="w-full border-collapse text-sm">
+      <thead>
+        <tr className="bg-gray-50">
+          {headers.map((h, i) => (
+            <th
+              key={i}
+              className="text-left px-4 py-3 font-semibold text-[#120d1b] border-b border-[#d7cfe7]"
+            >
+              {h}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, ri) => (
+          <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-gray-50/60'}>
+            {row.map((cell, ci) => (
+              <td
+                key={ci}
+                className={`px-4 py-3 text-gray-700 ${
+                  ci === 0 && monoFirstColumn ? 'font-mono text-xs' : ''
+                }`}
+              >
+                {cell}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+const SummaryTable = ({ rows }) => (
+  <div className="overflow-x-auto rounded-xl border border-[#d7cfe7]">
+    <table className="w-full border-collapse text-sm">
+      <thead>
+        <tr className="bg-gray-50">
+          <th className="text-left px-4 py-3 font-semibold text-[#120d1b] border-b border-[#d7cfe7]">
+            Question
+          </th>
+          <th className="text-left px-4 py-3 font-semibold text-[#120d1b] border-b border-[#d7cfe7]">
+            Answer
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(([q, a, tone], ri) => {
+          const toneClass = tone === 'good'
+            ? 'font-bold text-green-600'
+            : 'font-bold text-[#6B40C8]';
+          return (
+            <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-gray-50/60'}>
+              <td className="px-4 py-3 text-gray-700">{q}</td>
+              <td className={`px-4 py-3 ${toneClass}`}>{a}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
 );
 
 export default ClipRefine;
