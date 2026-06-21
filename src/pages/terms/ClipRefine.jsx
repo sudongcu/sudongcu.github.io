@@ -27,7 +27,7 @@ const ClipRefineTerms = () => {
           <div className="flex gap-3 text-sm text-gray-500">
             <span>v1.0.0</span>
             <span>·</span>
-            <span>Last updated: June 13, 2026</span>
+            <span>Last updated: June 21, 2026</span>
           </div>
         </motion.div>
       </header>
@@ -95,9 +95,9 @@ const ClipRefineTerms = () => {
 
           <Callout type="link">
             See Lemon Squeezy's full Terms:{' '}
-            <a href="https://www.lemonsqueezy.com/legal" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.lemonsqueezy.com/terms" target="_blank" rel="noopener noreferrer"
                className="text-[#6B40C8] underline hover:no-underline">
-              lemonsqueezy.com/legal
+              lemonsqueezy.com/terms
             </a>
           </Callout>
         </Section>
@@ -121,7 +121,7 @@ const ClipRefineTerms = () => {
         <Section number="4" title="Updates & Service Changes" icon="update">
           <ul className="space-y-2">
             <Bullet>We may push extension updates via the Chrome Web Store at any time</Bullet>
-            <Bullet>PRO features added during your license period are included at no extra cost</Bullet>
+            <Bullet>PRO features added during your license period (within the same major version line) are included at no extra cost</Bullet>
             <Bullet>We reserve the right to remove or modify features for technical or legal reasons</Bullet>
             <Bullet>
               If we ever discontinue ClipRefine entirely, existing PRO users keep access to the last
@@ -171,12 +171,16 @@ const ClipRefineTerms = () => {
               Uninstall the extension at any time. For PRO, click "Deactivate License" before uninstalling
               to free up a device slot for future use.
             </p>
+            <p className="text-gray-700 mt-3">
+              Your rules and settings stored in Chrome Sync will be deleted when you uninstall the extension.
+            </p>
           </SubSection>
 
           <SubSection title="By Us">
             <p className="text-gray-700">
               We may suspend or terminate access for violation of these terms (especially Section 3).
-              In rare cases, we may disable a license key found to be fraudulent or shared across many devices.
+              In rare cases, we may disable a license key found to be fraudulent or to exceed the
+              5-device activation limit per license key.
             </p>
           </SubSection>
         </Section>
@@ -206,7 +210,7 @@ const ClipRefineTerms = () => {
           className="mt-16 pt-8 border-t border-[#d7cfe7] text-center text-sm text-gray-500"
         >
           <p>
-            These terms are effective as of June 13, 2026.
+            These terms are effective as of June 21, 2026.
           </p>
           <p className="mt-2">
             Questions? Email{' '}

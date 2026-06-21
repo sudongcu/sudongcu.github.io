@@ -27,7 +27,7 @@ const ClipRefine = () => {
           <div className="flex gap-3 text-sm text-gray-500">
             <span>v1.0.0</span>
             <span>·</span>
-            <span>Last updated: June 13, 2026</span>
+            <span>Last updated: June 21, 2026</span>
           </div>
         </motion.div>
       </header>
@@ -37,182 +37,228 @@ const ClipRefine = () => {
         {/* Intro */}
         <Card>
           <p className="text-gray-700 leading-relaxed">
-            ClipRefine is a Chrome extension that processes clipboard text locally in your browser.
-            We are committed to protecting your privacy and being transparent about our data practices.
+            ClipRefine is a Chrome extension that refines clipboard text locally in your browser. This policy
+            describes exactly what data the extension reads, stores, and transmits, based on the published source code.
           </p>
           <p className="text-gray-700 leading-relaxed mt-3">
-            <strong>FREE version</strong> operates 100% offline with zero external requests.{' '}
-            <strong>PRO version</strong> uses Lemon Squeezy for payment processing and license validation —
-            see the "Third-Party Services" section below for details.
+            <strong>Summary:</strong> The FREE version makes zero network requests. The PRO version contacts
+            Lemon Squeezy only at the moments described below.
           </p>
         </Card>
 
-        {/* 1. Data Collection */}
-        <Section number="1" title="Data Collection" icon="database">
-          <SubSection title="What We DO NOT Collect">
-            <ul className="space-y-2">
-              <Bullet negative>
-                <strong>Clipboard content</strong> — All text processing happens entirely within your browser. Your copied text is never sent to any external server.
+        {/* 1. Data Stored Locally */}
+        <Section number="1" title="Data Stored Locally" icon="database">
+          <p className="text-gray-700 mb-4">
+            All data is stored via <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">chrome.storage.sync</code> —
+            accessible only to the extension on your Chrome profile, never sent to any server we operate.
+          </p>
+          <DataTable
+            headers={['Key', 'Contents', 'Purpose']}
+            rows={[
+              ['settings', 'isGlobalActive, showToast, showConsoleLog', 'Your preferences'],
+              ['rules', 'Array of rule objects: name, description, findPattern, replacePattern, isRegex, isActive, targetDomains', 'Text transformation rules you create'],
+              ['deviceId', 'UUID generated locally via crypto.randomUUID() on first use', 'Stable per-Chrome-profile identifier used to derive your license instance name'],
+              ['license (PRO only)', 'licenseKey, instanceId, instanceName, activatedAt, expiresAt, lastValidatedAt, customerId returned by Lemon Squeezy', 'License state'],
+            ]}
+            monoFirstColumn
+          />
+          <p className="text-gray-500 text-sm mt-3 italic">
+            If you are signed into Chrome with Sync enabled, this data syncs across your Chrome browsers via
+            Google's infrastructure. We never receive a copy.
+          </p>
+        </Section>
+
+        {/* 2. What We Never Collect or Store */}
+        <Section number="2" title="What We Never Collect or Store" icon="visibility_off">
+          <ul className="space-y-2">
+            <Bullet negative>
+              <strong>Clipboard contents</strong> — All text processing happens inside the copy event handler in
+              content.js. Rules are applied locally via <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">String.prototype.replaceAll</code> or
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]"> RegExp</code>, and the result is
+              written directly back to the clipboard. No clipboard text is sent over the network.
+            </Bullet>
+            <Bullet negative>
+              <strong>Browsing history</strong> — The extension reads <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">window.location.hostname</code> only
+              to match against your rules' <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">targetDomains</code>.
+              The hostname is never stored or transmitted.
+            </Bullet>
+            <Bullet negative>
+              <strong>Personal information</strong> — The extension itself does not collect names, emails, or
+              profile data. PRO checkout is handled separately by Lemon Squeezy (see #4).
+            </Bullet>
+            <Bullet negative>
+              <strong>Analytics or telemetry</strong> — No analytics SDK, no event reporting, no error reporting
+              service is loaded.
+            </Bullet>
+          </ul>
+        </Section>
+
+        {/* 3. Network Activity */}
+        <Section number="3" title="Network Activity" icon="cloud">
+          <SubSection title="FREE version">
+            <p className="text-gray-700">
+              <strong>Zero outbound requests.</strong> The extension does not call <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">fetch</code>,
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]"> XMLHttpRequest</code>, or load any
+              external resource. You can verify this in the source.
+            </p>
+          </SubSection>
+
+          <SubSection title="PRO version">
+            <p className="text-gray-700 mb-4">
+              The extension contacts <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">https://api.lemonsqueezy.com/v1</code> in
+              exactly three situations:
+            </p>
+            <DataTable
+              headers={['Endpoint', 'When', 'Request payload']}
+              rows={[
+                ['POST /v1/licenses/activate', 'When you click "Activate License"', 'license_key, instance_name'],
+                ['POST /v1/licenses/validate', 'Scheduled re-validation', 'license_key, instance_id'],
+                ['POST /v1/licenses/deactivate', 'When you click "Deactivate License"', 'license_key, instance_id'],
+              ]}
+              monoFirstColumn
+            />
+            <p className="text-gray-700 mt-4">Where:</p>
+            <ul className="space-y-2 mt-2">
+              <Bullet>
+                <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">instance_name</code> ={' '}
+                <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">ClipRefine-{'{'}first 8 characters of your locally-generated UUID{'}'}</code>
               </Bullet>
-              <Bullet negative>
-                <strong>Browsing history</strong> — We do not track or store which websites you visit.
-              </Bullet>
-              <Bullet negative>
-                <strong>Personal information</strong> — ClipRefine itself does not collect names, emails, or personal info. PRO purchases are processed by Lemon Squeezy who collects payment-related data on their own platform — see Third-Party Services.
-              </Bullet>
-              <Bullet negative>
-                <strong>Usage analytics</strong> — We do not use any analytics or tracking services.
+              <Bullet>
+                <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">instance_id</code> = UUID issued by Lemon Squeezy after activation
               </Bullet>
             </ul>
           </SubSection>
 
-          <SubSection title="What We Store Locally">
-            <p className="text-gray-700 mb-3">
-              The following data is stored locally in your browser using Chrome's Storage Sync API:
+          <Callout>
+            <p className="text-gray-700 mb-2">
+              <strong>Re-validation schedule:</strong> First check 5 minutes after Chrome starts, then approximately
+              every 24 hours, via <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">chrome.alarms</code>.
+              Re-validation runs only while you hold an active PRO license.
             </p>
-            <DataTable
-              headers={['Data', 'Purpose', 'Storage Location']}
-              rows={[
-                ['User-created rules', 'To apply text transformations', 'Chrome Storage Sync'],
-                ['Extension settings', 'To remember your preferences', 'Chrome Storage Sync'],
-                ['License key (PRO only)', 'To unlock PRO features and revalidate license', 'Chrome Storage Sync'],
-                ['Anonymous device ID (UUID)', 'Generated locally for license activation tracking', 'Chrome Storage Sync'],
-                ['License instance ID', 'Returned by Lemon Squeezy after activation', 'Chrome Storage Sync'],
-              ]}
-            />
-            <p className="text-gray-500 text-sm mt-3 italic">
-              This data syncs across your Chrome browsers if you are signed into Chrome, but is never accessible to us or any third party.
+            <p className="text-gray-700">
+              <strong>Network resilience:</strong> If Lemon Squeezy is unreachable (network error, timeout, 5xx),
+              the extension keeps your existing PRO state. A license is downgraded only when Lemon Squeezy explicitly
+              responds that it is no longer valid (e.g., refunded or disabled).
             </p>
-          </SubSection>
+          </Callout>
         </Section>
 
-        {/* 2. Permissions */}
-        <Section number="2" title="Permissions Explained" icon="lock">
-          <p className="text-gray-700 mb-4">ClipRefine requires the following permissions:</p>
+        {/* 4. Third-Party Service */}
+        <Section number="4" title="Third-Party Service: Lemon Squeezy (PRO only)" icon="groups">
+          <p className="text-gray-700 mb-4">
+            We use Lemon Squeezy as our Merchant of Record for payment processing and license issuance.
+          </p>
+          <ul className="space-y-2">
+            <Bullet>
+              <strong>What we send to Lemon Squeezy from the extension:</strong> license key, instance name,
+              instance ID — as listed in #3. No clipboard data, no rules, no browsing data.
+            </Bullet>
+            <Bullet>
+              <strong>What Lemon Squeezy returns and we store locally:</strong>{' '}
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">instance.id</code>,{' '}
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">license_key.status</code>,{' '}
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">license_key.expires_at</code>,{' '}
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">meta.customer_id</code>.
+            </Bullet>
+            <Bullet>
+              <strong>What Lemon Squeezy collects directly from you at checkout (independent of the extension):</strong>{' '}
+              your email address, billing details, payment method. This is handled on{' '}
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">*.lemonsqueezy.com</code>, not in the extension.
+            </Bullet>
+            <Bullet>Tax and refunds are handled by Lemon Squeezy.</Bullet>
+            <Bullet>
+              Their privacy policy:{' '}
+              <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener noreferrer"
+                 className="text-[#6B40C8] underline hover:no-underline">
+                lemonsqueezy.com/privacy
+              </a>
+            </Bullet>
+          </ul>
+        </Section>
+
+        {/* 5. Permissions */}
+        <Section number="5" title="Permissions" icon="lock">
+          <p className="text-gray-700 mb-4">
+            Permissions declared in <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">manifest.json</code> and why each is needed:
+          </p>
           <DataTable
-            headers={['Permission', 'Why We Need It']}
+            headers={['Permission', 'Reason']}
             rows={[
-              ['storage', 'To save your rules and settings'],
-              ['activeTab', 'To detect the current website for domain-specific rules'],
-              ['clipboardWrite', 'To write refined text back to your clipboard'],
-              ['host_permissions (<all_urls>)', 'To run the content script on all websites where you copy text'],
-              ['alarms', 'To schedule periodic license re-validation (every 24 hours, PRO only)'],
+              ['storage', 'Read/write rules, settings, and license state in chrome.storage.sync'],
+              ['activeTab', "Detect the current page's hostname for domain-scoped rules"],
+              ['clipboardWrite', 'Replace your copied text with the refined result'],
+              ['alarms', 'Schedule the 24-hour PRO license re-validation'],
+              ['host_permissions: <all_urls>', 'Run the content script on any page where you press Copy'],
             ]}
             monoFirstColumn
           />
         </Section>
 
-        {/* 3. Data Processing */}
-        <Section number="3" title="Data Processing" icon="settings">
-          <SubSection title="FREE Version">
-            <ul className="space-y-2">
-              <Bullet>All text processing occurs <strong>locally</strong> in your browser</Bullet>
-              <Bullet><strong>Zero external network requests</strong></Bullet>
-              <Bullet>Your clipboard content never leaves your device</Bullet>
-            </ul>
-          </SubSection>
-          <SubSection title="PRO Version">
-            <ul className="space-y-2">
-              <Bullet>Clipboard text processing remains <strong>100% local</strong> — never sent anywhere</Bullet>
-              <Bullet>License key + anonymous device ID sent to Lemon Squeezy on activation/deactivation</Bullet>
-              <Bullet>Automatic license re-validation every 24 hours (detects refunds/cancellations)</Bullet>
-            </ul>
-          </SubSection>
+        {/* 6. Data Retention */}
+        <Section number="6" title="Data Retention" icon="schedule">
+          <ul className="space-y-2">
+            <Bullet>
+              Locally stored data persists until you uninstall the extension, click "Clear extension data" in{' '}
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">chrome://extensions</code>, or explicitly
+              deactivate your license (which clears <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">license</code> and{' '}
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">instanceId</code>).
+            </Bullet>
+            <Bullet>
+              License records on Lemon Squeezy's side persist according to their own retention policy.
+            </Bullet>
+          </ul>
         </Section>
 
-        {/* 4. Third-Party Services */}
-        <Section number="4" title="Third-Party Services" icon="groups">
-          <p className="text-gray-700 mb-4">
-            ClipRefine's <strong>FREE version</strong> does not connect to any third-party services.
-          </p>
+        {/* 7. Your Rights */}
+        <Section number="7" title="Your Rights" icon="account_circle">
+          <ul className="space-y-2">
+            <Bullet>View / edit / delete all your rules and settings on the extension's options page.</Bullet>
+            <Bullet>
+              Deactivate your PRO license via "Deactivate License", which calls{' '}
+              <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">POST /v1/licenses/deactivate</code> and
+              clears the local <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">license</code> object.
+              This frees up one of your 5 device slots.
+            </Bullet>
+            <Bullet>Uninstall the extension to remove all local data.</Bullet>
+          </ul>
           <Callout>
-            <p className="font-bold text-[#6B40C8] mb-3 text-lg">
-              Lemon Squeezy (PRO version only)
+            <p className="text-gray-700">
+              <strong>EU/UK users:</strong> Personal data we hold is limited to what is listed in #1. Because that
+              data lives on your device, you can exercise GDPR/UK GDPR rights (access, deletion, portability)
+              directly via Chrome. For data held by Lemon Squeezy, contact them through their privacy page.
             </p>
-            <p className="text-gray-700 mb-3">
-              We use Lemon Squeezy for payment processing and license management. They act as the Merchant of Record.
-            </p>
-            <ul className="space-y-2">
-              <Bullet><strong>What's shared:</strong> Your email (at checkout), payment info (handled by them, never by us), license key, anonymous device identifier</Bullet>
-              <Bullet><strong>When triggered:</strong> Only when you purchase PRO, activate/deactivate license, or during 24-hour re-validation</Bullet>
-              <Bullet><strong>Tax handling:</strong> Lemon Squeezy automatically calculates and remits VAT/GST for your region</Bullet>
-              <Bullet><strong>Compliance:</strong> GDPR and CCPA compliant</Bullet>
-              <Bullet>
-                <strong>Their Privacy Policy:</strong>{' '}
-                <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener noreferrer"
-                   className="text-[#6B40C8] underline hover:no-underline">
-                  lemonsqueezy.com/privacy
-                </a>
-              </Bullet>
-            </ul>
           </Callout>
-        </Section>
-
-        {/* 5. Data Security */}
-        <Section number="5" title="Data Security" icon="security">
-          <ul className="space-y-2">
-            <Bullet>All data is stored using Chrome's secure Storage API</Bullet>
-            <Bullet>No external database or server stores your information</Bullet>
-            <Bullet>Your rules and settings are encrypted in transit when syncing across Chrome browsers</Bullet>
-          </ul>
-        </Section>
-
-        {/* 6. Your Rights */}
-        <Section number="6" title="Your Rights" icon="account_circle">
-          <p className="text-gray-700 mb-4">You have full control over your data:</p>
-          <div className="grid md:grid-cols-3 gap-4">
-            <RightCard title="View" color="purple">
-              Access your rules and settings through the extension options page
-            </RightCard>
-            <RightCard title="Deactivate License (PRO)" color="purple">
-              Remove your PRO license from this device via "Deactivate License" in extension settings
-            </RightCard>
-            <RightCard title="Delete" color="red">
-              Remove all data by uninstalling the extension or clearing extension data in Chrome settings
-            </RightCard>
-          </div>
-        </Section>
-
-        {/* 7. Refunds & Subscriptions */}
-        <Section number="7" title="Refunds & Subscriptions" icon="payments">
-          <ul className="space-y-2">
-            <Bullet>ClipRefine PRO is a <strong>one-time lifetime purchase</strong> — no subscriptions, no recurring charges</Bullet>
-            <Bullet>Refunds are processed by Lemon Squeezy. You can request a refund directly through the "View order" link in your purchase receipt email.</Bullet>
-            <Bullet>Refunded licenses are automatically deactivated within 24 hours (next license re-validation cycle)</Bullet>
-          </ul>
         </Section>
 
         {/* 8. Children's Privacy */}
         <Section number="8" title="Children's Privacy" icon="child_care">
           <p className="text-gray-700">
-            ClipRefine does not knowingly collect any information from children under 13 years of age.
+            ClipRefine does not knowingly collect data from children under 13.
           </p>
         </Section>
 
         {/* 9. Changes to This Policy */}
         <Section number="9" title="Changes to This Policy" icon="edit">
-          <p className="text-gray-700 mb-3">
-            We may update this privacy policy when new features are added. Significant changes will be communicated through:
+          <p className="text-gray-700">
+            Material changes will be noted in extension update release notes. The version and "Last updated" date
+            at the top of this document reflect the current revision.
           </p>
-          <ul className="space-y-2">
-            <Bullet>Extension update notes</Bullet>
-            <Bullet>In-app notification</Bullet>
-          </ul>
         </Section>
 
-        {/* 10. Summary */}
-        <Section number="10" title="Summary" icon="check_circle">
-          <SummaryTable
-            rows={[
-              ['Do we collect your clipboard data?', 'No — always local', 'good'],
-              ['Do we track your browsing?', 'No', 'good'],
-              ['Do we use analytics?', 'No', 'good'],
-              ['Does FREE version send any data externally?', 'No — 100% offline', 'good'],
-              ['Does PRO version send data externally?', 'Only license key + anonymous device ID, to Lemon Squeezy', 'neutral'],
-              ['Who handles PRO payments?', 'Lemon Squeezy (Merchant of Record)', 'neutral'],
-              ['Where is data stored?', 'Locally in Chrome Storage Sync', 'neutral'],
-            ]}
-          />
+        {/* 10. Contact */}
+        <Section number="10" title="Contact" icon="mail">
+          <p className="text-gray-700">
+            Questions about this policy:{' '}
+            <a href="mailto:sudongcu.work@gmail.com" className="text-[#6B40C8] underline hover:no-underline">
+              sudongcu.work@gmail.com
+            </a>
+          </p>
+          <p className="text-gray-700 mt-2">
+            See also:{' '}
+            <a href="/terms/cliprefine" className="text-[#6B40C8] underline hover:no-underline">
+              Terms of Service
+            </a>
+          </p>
         </Section>
 
         {/* Footer */}
@@ -222,7 +268,7 @@ const ClipRefine = () => {
           viewport={{ once: true }}
           className="mt-16 pt-8 border-t border-[#d7cfe7] text-center text-sm text-gray-500"
         >
-          <p>This privacy policy is effective as of June 13, 2026.</p>
+          <p>This privacy policy is effective as of June 21, 2026.</p>
           <p className="mt-2">
             Questions? Email{' '}
             <a href="mailto:sudongcu.work@gmail.com" className="text-[#6B40C8] underline hover:no-underline">
@@ -303,19 +349,6 @@ const Callout = ({ children }) => (
   </div>
 );
 
-const RightCard = ({ title, color, children }) => {
-  const colorClasses = {
-    purple: 'border-[#d7cfe7] text-[#6B40C8]',
-    red: 'border-red-200 text-red-600',
-  };
-  return (
-    <div className={`bg-gray-50 rounded-xl border p-4 ${colorClasses[color]}`}>
-      <h4 className="font-bold mb-2">{title}</h4>
-      <p className="text-gray-700 text-sm">{children}</p>
-    </div>
-  );
-};
-
 const DataTable = ({ headers, rows, monoFirstColumn = false }) => (
   <div className="overflow-x-auto rounded-xl border border-[#d7cfe7]">
     <table className="w-full border-collapse text-sm">
@@ -346,36 +379,6 @@ const DataTable = ({ headers, rows, monoFirstColumn = false }) => (
             ))}
           </tr>
         ))}
-      </tbody>
-    </table>
-  </div>
-);
-
-const SummaryTable = ({ rows }) => (
-  <div className="overflow-x-auto rounded-xl border border-[#d7cfe7]">
-    <table className="w-full border-collapse text-sm">
-      <thead>
-        <tr className="bg-gray-50">
-          <th className="text-left px-4 py-3 font-semibold text-[#120d1b] border-b border-[#d7cfe7]">
-            Question
-          </th>
-          <th className="text-left px-4 py-3 font-semibold text-[#120d1b] border-b border-[#d7cfe7]">
-            Answer
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map(([q, a, tone], ri) => {
-          const toneClass = tone === 'good'
-            ? 'font-bold text-green-600'
-            : 'font-bold text-[#6B40C8]';
-          return (
-            <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-gray-50/60'}>
-              <td className="px-4 py-3 text-gray-700">{q}</td>
-              <td className={`px-4 py-3 ${toneClass}`}>{a}</td>
-            </tr>
-          );
-        })}
       </tbody>
     </table>
   </div>
