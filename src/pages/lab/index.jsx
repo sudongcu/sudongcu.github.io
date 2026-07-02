@@ -1,18 +1,10 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Smartphone, FlaskConical, Sparkles } from 'lucide-react';
+import { Smartphone, FlaskConical } from 'lucide-react';
 import Logo from '../../components/Logo';
 import { useSeo } from '../../hooks/useSeo';
 
 const TOOLS = [
-  {
-    slug: 'gemini-watermark-remover',
-    title: 'Gemini Watermark Remover',
-    description: 'Erase the visible Gemini / Nano Banana watermark from AI-generated images using browser-side inpainting. No upload.',
-    icon: Sparkles,
-    thumbnail: '/labs/gemini-watermark-remover.png',
-    tags: ['Image', 'AI', 'Inpaint'],
-  },
   {
     slug: 'phoneframe',
     title: 'PhoneFrame',

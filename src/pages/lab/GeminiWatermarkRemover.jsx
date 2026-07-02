@@ -1,8 +1,76 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Download, RotateCcw, Sparkles, Wand2, Loader2 } from 'lucide-react';
+import { Download, RotateCcw, Sparkles, Wand2, Loader2, Lock } from 'lucide-react';
 import LabLinkButton from '../../components/LabLinkButton';
 import { useSeo } from '../../hooks/useSeo';
 import { preloadMigan, inpaintWithMigan } from '../../utils/migan';
+
+const GATE_HASH = 'd1a5e76347c48f515e147c752f3576fed4cd3aaf6e8ebd69fb0cc996b99361a8';
+const GATE_KEY = 'gwr-unlocked';
+
+const sha256Hex = async (text) => {
+  const buf = new TextEncoder().encode(text);
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+};
+
+const Gate = ({ onUnlock }) => {
+  const [pw, setPw] = useState('');
+  const [err, setErr] = useState('');
+  const [busy, setBusy] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => { inputRef.current?.focus(); }, []);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!pw || busy) return;
+    setBusy(true);
+    setErr('');
+    try {
+      const h = await sha256Hex(pw);
+      if (h === GATE_HASH) {
+        try { sessionStorage.setItem(GATE_KEY, '1'); } catch {}
+        onUnlock();
+      } else {
+        setErr('Wrong password.');
+        setPw('');
+      }
+    } catch {
+      setErr('Something went wrong.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-dark-900 text-white flex items-center justify-center px-4">
+      <form onSubmit={submit} className="w-full max-w-sm">
+        <div className="flex items-center justify-center gap-2 mb-6 text-primary-400">
+          <Lock className="w-5 h-5" />
+          <span className="text-sm tracking-wider uppercase">Restricted</span>
+        </div>
+        <input
+          ref={inputRef}
+          type="password"
+          value={pw}
+          onChange={(e) => setPw(e.target.value)}
+          disabled={busy}
+          autoComplete="current-password"
+          className="w-full px-4 py-3 bg-dark-800 border border-dark-600 focus:border-primary-400 outline-none rounded-lg text-white"
+          placeholder="Password"
+        />
+        {err && <div className="text-red-400 text-sm mt-2 text-center">{err}</div>}
+        <button
+          type="submit"
+          disabled={!pw || busy}
+          className="w-full mt-4 px-4 py-3 bg-primary-500 hover:bg-primary-600 disabled:bg-dark-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+        >
+          {busy ? 'Checking…' : 'Enter'}
+        </button>
+      </form>
+    </div>
+  );
+};
 
 const SEO_JSON_LD = {
   '@context': 'https://schema.org',
@@ -48,7 +116,7 @@ const normaliseBox = (b) => {
   return { x, y, w, h };
 };
 
-const GeminiWatermarkRemover = () => {
+const GeminiWatermarkRemoverTool = () => {
   useSeo({
     title: 'Gemini Watermark Remover — Free AI Image Cleanup | DG.DEV Lab',
     description: 'Remove the Gemini / Nano Banana watermark from AI-generated images in seconds. Free, browser-based, no uploads — your image never leaves your device.',
@@ -436,6 +504,15 @@ const GeminiWatermarkRemover = () => {
       </main>
     </div>
   );
+};
+
+const GeminiWatermarkRemover = () => {
+  const [unlocked, setUnlocked] = useState(() => {
+    try { return sessionStorage.getItem(GATE_KEY) === '1'; } catch { return false; }
+  });
+
+  if (!unlocked) return <Gate onUnlock={() => setUnlocked(true)} />;
+  return <GeminiWatermarkRemoverTool />;
 };
 
 export default GeminiWatermarkRemover;
