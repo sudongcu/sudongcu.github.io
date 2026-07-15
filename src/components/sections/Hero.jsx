@@ -66,14 +66,8 @@ const Hero = () => {
 
             <motion.div variants={itemVariants} className="flex gap-4 pt-4">
               <a
-                href="#projects"
-                className="px-8 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50"
-              >
-                {HERO_TEXT.cta}
-              </a>
-              <a
                 href="#contact"
-                className="px-8 py-3 border border-primary-500 text-primary-400 hover:bg-primary-500/10 rounded-lg font-medium transition-colors"
+                className="px-8 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50"
               >
                 Get In Touch
               </a>

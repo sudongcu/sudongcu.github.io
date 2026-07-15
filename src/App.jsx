@@ -1,4 +1,4 @@
-import { Navbar, Hero, About, Experience, TechStack, ProjectList, Contact } from './components';
+import { Navbar, Hero, About, Experience, TechStack, Contact } from './components';
 import Blog from './components/sections/Blog';
 import './App.css';
 
@@ -11,7 +11,6 @@ function App() {
         <About />
         <Experience />
         <TechStack />
-        <ProjectList />
         <Blog />
         <Contact />
       </main>

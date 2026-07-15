@@ -3,7 +3,6 @@ export const NAV_LINKS = [
   { id: 'about', title: 'About', href: '#about' },
   { id: 'experience', title: 'Experience', href: '#experience' },
   { id: 'skills', title: 'Skills', href: '#skills' },
-  { id: 'projects', title: 'Projects', href: '#projects' },
   { id: 'blog', title: 'Blog', href: '#blog' },
   { id: 'contact', title: 'Contact', href: '#contact' },
 ];
@@ -90,20 +89,6 @@ export const TECH_STACK = {
   }
 };
 
-// Project Data
-export const PROJECTS = [
-  {
-    id: 1,
-    title: 'Screen Timer',
-    description: 'Chrome extension to track focus time manually or automatically by website. Simple and powerful tool for mindful screen time management.',
-    image: '/projects/screen-timer.png',
-    technologies: ['Chrome Extension', 'JavaScript', 'HTML', 'CSS'],
-    demoLink: 'https://chromewebstore.google.com/detail/icgeccdeonblfglohopdmlfjebidglem',
-    githubLink: null,
-    featured: true
-  }
-];
-
 // Contact Information
 export const CONTACT_INFO = {
   email: 'sudongcu.work@gmail.com',
@@ -116,6 +101,5 @@ export const HERO_TEXT = {
   greeting: 'Hello, I\'m',
   name: 'DONGGU SEO',
   title: 'Full Stack Developer',
-  description: 'I create beautiful and functional web experiences with modern technologies.',
-  cta: 'View My Work'
+  description: 'I create beautiful and functional web experiences with modern technologies.'
 };
