@@ -67,7 +67,7 @@
 .pf-statusbar-off {
   background: transparent;
   position: absolute;
-  top: 0;
+  top: calc(16px * var(--pf-scale));
   left: 0;
   right: 0;
 }
@@ -94,25 +94,4 @@
 .pf-status-icons > svg {
   height: calc(12px * var(--pf-scale));
   width: auto;
-}
-
-/* Dynamic Island — overlays the center of the status bar */
-.pf-screen::before {
-  content: '';
-  position: absolute;
-  top: calc(11px * var(--pf-scale));
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(110px * var(--pf-scale));
-  height: calc(33px * var(--pf-scale));
-  background: #000;
-  border-radius: calc(20px * var(--pf-scale));
-  box-shadow: inset 0 0 0 1px #1a1a1c;
-  z-index: 2;
-  pointer-events: none;
-}
-
-/* Landscape: hide status bar + DI for clean look (typical of fullscreen apps) */
-.pf-phone.is-landscape .pf-screen::before {
-  display: none;
 }
