@@ -7,27 +7,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Legacy tokens (still used by /lab pages)
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-        },
-        dark: {
-          900: '#0a0a0a',
-          800: '#141414',
-          700: '#1e1e1e',
-          600: '#282828',
-        },
-        // Seasonal palette — values live in CSS variables (src/index.css,
-        // per [data-season]); the names stay winter-flavoured, the roles don't.
+        // Palette — values live in CSS variables (src/index.css, per
+        // [data-season] and the fixed [data-lab] set); the names stay
+        // winter-flavoured, the roles don't.
         abyss: 'rgb(var(--c-abyss) / <alpha-value>)',
         deep: 'rgb(var(--c-deep) / <alpha-value>)',
         ice: {

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Download, RotateCcw, Smartphone } from 'lucide-react';
 import { toPng } from 'html-to-image';
-import LabLinkButton from '../../components/LabLinkButton';
+import LabShell from './LabShell';
 import { useSeo } from '../../hooks/useSeo';
 import './phoneframe.css';
 
 const REF_SHORT_SIDE = 390;
+const IDLE_META = 'Load a specimen to see its readout.';
 
 const PHONEFRAME_JSON_LD = {
   '@context': 'https://schema.org',
@@ -18,6 +19,20 @@ const PHONEFRAME_JSON_LD = {
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   isAccessibleForFree: true,
 };
+
+/** A row of the status-bar controls: a label and a segmented switch. */
+const Switch = ({ label, value, onChange, options }) => (
+  <div className="flex items-center gap-4">
+    <span className="lab-label min-w-[6.5rem]">{label}</span>
+    <div className="lab-seg" role="group" aria-label={label}>
+      {options.map(([val, text]) => (
+        <button key={String(val)} type="button" aria-pressed={value === val} onClick={() => onChange(val)} className="lab-seg-btn">
+          {text}
+        </button>
+      ))}
+    </div>
+  </div>
+);
 
 const PhoneFrame = () => {
   useSeo({
@@ -33,7 +48,7 @@ const PhoneFrame = () => {
   const [naturalSize, setNaturalSize] = useState({ w: 0, h: 0 });
   const [isLandscape, setIsLandscape] = useState(false);
   const [scale, setScale] = useState(1);
-  const [meta, setMeta] = useState('Upload an image to see details here.');
+  const [meta, setMeta] = useState(IDLE_META);
   const [isDragOver, setIsDragOver] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [statusTime, setStatusTime] = useState('');
@@ -77,7 +92,7 @@ const PhoneFrame = () => {
     const hh = String(now.getHours()).padStart(2, '0');
     const mm = String(now.getMinutes()).padStart(2, '0');
     setStatusTime(`${hh}:${mm}`);
-    setMeta(`Original ${w} × ${h}px · ${landscape ? 'Landscape' : 'Portrait'} · Exported at original resolution`);
+    setMeta(`${w} × ${h} px · ${landscape ? 'Landscape' : 'Portrait'} · exported at original resolution`);
   };
 
   const handleImageError = () => {
@@ -143,7 +158,7 @@ const PhoneFrame = () => {
     setNaturalSize({ w: 0, h: 0 });
     setIsLandscape(false);
     setScale(1);
-    setMeta('Upload an image to see details here.');
+    setMeta(IDLE_META);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -154,23 +169,16 @@ const PhoneFrame = () => {
     isExporting ? 'is-exporting' : '',
   ].filter(Boolean).join(' ');
 
-  return (
-    <div className="min-h-screen bg-dark-900 text-white">
-      <header className="border-b border-dark-700 bg-dark-800/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 grid grid-cols-3 items-center">
-          <div className="justify-self-start">
-            <LabLinkButton to="/lab" direction="back" />
-          </div>
-          <div className="justify-self-center inline-flex items-center gap-2">
-            <Smartphone className="w-6 h-6 text-primary-400" />
-            <span className="text-2xl font-bold text-gradient tracking-wide">PhoneFrame</span>
-          </div>
-          <div className="justify-self-end" aria-hidden="true" />
-        </div>
-      </header>
+  const readout = isExporting
+    ? { text: 'Exporting…', state: 'busy' }
+    : imageUrl
+      ? { text: 'Specimen loaded', state: 'on' }
+      : { text: 'Awaiting specimen', state: 'off' };
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col items-center gap-8">
-        <p className="text-gray-400 text-center">Drop an image and see it as a phone mockup</p>
+  return (
+    <LabShell id="EXP-01" name="PhoneFrame" icon={Smartphone} readout={readout}>
+      <div className="mx-auto flex max-w-3xl flex-col items-center gap-8">
+        <p className="text-center text-sm text-ice-300">Drop a screenshot; it comes back wrapped in a phone.</p>
 
         <label
           htmlFor="pf-file-input"
@@ -178,14 +186,13 @@ const PhoneFrame = () => {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`w-full max-w-md border-2 border-dashed rounded-2xl px-5 py-7 text-center cursor-pointer transition-all ${
-            isDragOver
-              ? 'border-primary-400 bg-primary-500/5'
-              : 'border-dark-600 hover:border-primary-500/50 hover:bg-dark-800/50'
-          }`}
+          className={`lab-tray lab-corners max-w-md px-6 py-8 ${isDragOver ? 'is-over' : ''}`}
         >
-          <div className="text-base font-semibold mb-1">Drag an image or click to choose</div>
-          <div className="text-gray-400 text-sm">PNG · JPG · WebP · GIF — orientation auto-detected</div>
+          <span className="lab-label mb-3 block">Specimen tray</span>
+          <div className="text-base font-semibold text-ice-50">Drag an image here or click to choose</div>
+          <div className="mt-1 font-mono text-[11px] tracking-wide text-ice-400">
+            PNG · JPG · WebP · GIF — orientation auto-detected · paste works too
+          </div>
           <input
             id="pf-file-input"
             ref={fileInputRef}
@@ -196,7 +203,7 @@ const PhoneFrame = () => {
           />
         </label>
 
-        <div className="w-full overflow-x-auto flex justify-center">
+        <div className="flex w-full justify-center overflow-x-auto">
           <div
             ref={phoneRef}
             className={phoneClass}
@@ -248,130 +255,48 @@ const PhoneFrame = () => {
         </div>
 
         {imageUrl && !isLandscape && (
-          <div className="flex flex-col gap-3 text-sm">
-            <div className="flex items-center gap-3">
-              <span className="text-gray-400 min-w-[7rem]">Tint</span>
-              <div className="inline-flex rounded-md border border-dark-600 overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setStatusBarStyle('dark')}
-                  className={`px-3 py-1.5 transition-colors ${
-                    statusBarStyle === 'dark'
-                      ? 'bg-dark-600 text-white'
-                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
-                  }`}
-                >
-                  Dark
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setStatusBarStyle('light')}
-                  className={`px-3 py-1.5 transition-colors border-l border-dark-600 ${
-                    statusBarStyle === 'light'
-                      ? 'bg-dark-600 text-white'
-                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
-                  }`}
-                >
-                  Light
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setStatusBarStyle('off')}
-                  className={`px-3 py-1.5 transition-colors border-l border-dark-600 ${
-                    statusBarStyle === 'off'
-                      ? 'bg-dark-600 text-white'
-                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
-                  }`}
-                >
-                  Off
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <span className="text-gray-400 min-w-[7rem]">Time & icons</span>
-              <div className="inline-flex rounded-md border border-dark-600 overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setShowStatusContent(true)}
-                  className={`px-3 py-1.5 transition-colors ${
-                    showStatusContent
-                      ? 'bg-dark-600 text-white'
-                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
-                  }`}
-                >
-                  On
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowStatusContent(false)}
-                  className={`px-3 py-1.5 transition-colors border-l border-dark-600 ${
-                    !showStatusContent
-                      ? 'bg-dark-600 text-white'
-                      : 'text-gray-400 hover:bg-dark-700 hover:text-white'
-                  }`}
-                >
-                  Off
-                </button>
-              </div>
-            </div>
-
+          <div className="lab-panel flex w-full max-w-md flex-col gap-3 p-4">
+            <span className="lab-label text-frost/80">Status bar</span>
+            <Switch
+              label="Tint"
+              value={statusBarStyle}
+              onChange={setStatusBarStyle}
+              options={[['dark', 'Dark'], ['light', 'Light'], ['off', 'Off']]}
+            />
+            <Switch
+              label="Time & icons"
+              value={showStatusContent}
+              onChange={setShowStatusContent}
+              options={[[true, 'On'], [false, 'Off']]}
+            />
             {statusBarStyle === 'off' && showStatusContent && (
-              <div className="flex items-center gap-3">
-                <span className="text-gray-400 min-w-[7rem]">Text color</span>
-                <div className="inline-flex rounded-md border border-dark-600 overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => setOverlayTextColor('white')}
-                    className={`px-3 py-1.5 transition-colors ${
-                      overlayTextColor === 'white'
-                        ? 'bg-dark-600 text-white'
-                        : 'text-gray-400 hover:bg-dark-700 hover:text-white'
-                    }`}
-                  >
-                    White
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setOverlayTextColor('black')}
-                    className={`px-3 py-1.5 transition-colors border-l border-dark-600 ${
-                      overlayTextColor === 'black'
-                        ? 'bg-dark-600 text-white'
-                        : 'text-gray-400 hover:bg-dark-700 hover:text-white'
-                    }`}
-                  >
-                    Black
-                  </button>
-                </div>
-              </div>
+              <Switch
+                label="Text color"
+                value={overlayTextColor}
+                onChange={setOverlayTextColor}
+                options={[['white', 'White'], ['black', 'Black']]}
+              />
             )}
           </div>
         )}
 
-        <div className="flex flex-wrap gap-3 justify-center">
-          <button
-            type="button"
-            onClick={handleDownload}
-            disabled={!imageUrl || isExporting}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 disabled:bg-dark-600 disabled:cursor-not-allowed disabled:text-gray-500 text-white rounded-lg font-medium transition-all"
-          >
-            <Download className="w-4 h-4" />
-            {isExporting ? 'Generating...' : 'Download PNG'}
+        <div className="flex flex-wrap justify-center gap-3">
+          <button type="button" onClick={handleDownload} disabled={!imageUrl || isExporting} className="lab-btn">
+            <Download className="h-4 w-4" />
+            {isExporting ? 'Generating…' : 'Download PNG'}
           </button>
-          <button
-            type="button"
-            onClick={handleReset}
-            disabled={!imageUrl}
-            className="inline-flex items-center gap-2 px-6 py-3 border border-dark-600 hover:border-gray-400 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
+          <button type="button" onClick={handleReset} disabled={!imageUrl} className="lab-btn-ghost">
+            <RotateCcw className="h-4 w-4" />
             Reset
           </button>
         </div>
 
-        <div className="text-gray-400 text-sm text-center min-h-[1.2em]">{meta}</div>
-      </main>
-    </div>
+        <div className="lab-readout flex min-h-[1.2em] items-center gap-2 text-center">
+          <span className={`lab-led ${imageUrl ? 'lab-led-on' : ''}`} aria-hidden />
+          {meta}
+        </div>
+      </div>
+    </LabShell>
   );
 };
 

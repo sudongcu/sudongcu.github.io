@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Download, RotateCcw, Sparkles, Wand2, Loader2, Lock } from 'lucide-react';
-import LabLinkButton from '../../components/LabLinkButton';
+import LabShell from './LabShell';
+import useLabPalette from './useLabPalette';
 import { useSeo } from '../../hooks/useSeo';
 import { preloadMigan, inpaintWithMigan } from '../../utils/migan';
 
@@ -14,6 +15,7 @@ const sha256Hex = async (text) => {
 };
 
 const Gate = ({ onUnlock }) => {
+  useLabPalette();
   const [pw, setPw] = useState('');
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
@@ -29,7 +31,7 @@ const Gate = ({ onUnlock }) => {
     try {
       const h = await sha256Hex(pw);
       if (h === GATE_HASH) {
-        try { sessionStorage.setItem(GATE_KEY, '1'); } catch {}
+        try { sessionStorage.setItem(GATE_KEY, '1'); } catch { /* private mode — the unlock just won't persist */ }
         onUnlock();
       } else {
         setErr('Wrong password.');
@@ -43,30 +45,30 @@ const Gate = ({ onUnlock }) => {
   };
 
   return (
-    <div className="min-h-screen bg-dark-900 text-white flex items-center justify-center px-4">
-      <form onSubmit={submit} className="w-full max-w-sm">
-        <div className="flex items-center justify-center gap-2 mb-6 text-primary-400">
-          <Lock className="w-5 h-5" />
-          <span className="text-sm tracking-wider uppercase">Restricted</span>
+    <div className="lab-grid flex min-h-screen items-center justify-center bg-abyss px-4 text-ice-100">
+      <form onSubmit={submit} className="lab-panel w-full max-w-sm overflow-hidden">
+        <div className="lab-hazard-warn h-2" aria-hidden />
+        <div className="p-6">
+          <div className="mb-1 flex items-center gap-2 text-aurora">
+            <Lock className="h-4 w-4" />
+            <span className="lab-label text-aurora">Restricted area</span>
+          </div>
+          <p className="mb-5 text-sm text-ice-300">This bench needs a key.</p>
+          <input
+            ref={inputRef}
+            type="password"
+            value={pw}
+            onChange={(e) => setPw(e.target.value)}
+            disabled={busy}
+            autoComplete="current-password"
+            className="w-full rounded-md border border-white/15 bg-abyss px-4 py-3 font-mono text-sm text-ice-50 outline-none transition-colors placeholder:text-ice-400 focus:border-frost disabled:opacity-60"
+            placeholder="Password"
+          />
+          {err && <div className="mt-2 font-mono text-xs text-aurora">{err}</div>}
+          <button type="submit" disabled={!pw || busy} className="lab-btn mt-4 w-full justify-center">
+            {busy ? 'Checking…' : 'Enter'}
+          </button>
         </div>
-        <input
-          ref={inputRef}
-          type="password"
-          value={pw}
-          onChange={(e) => setPw(e.target.value)}
-          disabled={busy}
-          autoComplete="current-password"
-          className="w-full px-4 py-3 bg-dark-800 border border-dark-600 focus:border-primary-400 outline-none rounded-lg text-white"
-          placeholder="Password"
-        />
-        {err && <div className="text-red-400 text-sm mt-2 text-center">{err}</div>}
-        <button
-          type="submit"
-          disabled={!pw || busy}
-          className="w-full mt-4 px-4 py-3 bg-primary-500 hover:bg-primary-600 disabled:bg-dark-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
-        >
-          {busy ? 'Checking…' : 'Enter'}
-        </button>
       </form>
     </div>
   );
@@ -314,32 +316,27 @@ const GeminiWatermarkRemoverTool = () => {
 
   const displaySrc = resultUrl || imageUrl;
 
-  return (
-    <div className={`min-h-screen bg-dark-900 text-white ${isProcessing ? 'cursor-wait' : ''}`}>
-      <header className="border-b border-dark-700 bg-dark-800/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 grid grid-cols-[auto_1fr_auto] items-center gap-3">
-          <div className="justify-self-start">
-            <LabLinkButton to="/lab" direction="back" />
-          </div>
-          <div className="justify-self-center inline-flex items-center gap-2 min-w-0">
-            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-primary-400 flex-shrink-0" />
-            <span className="text-base sm:text-xl lg:text-2xl font-bold text-gradient tracking-wide whitespace-nowrap">
-              Gemini Watermark Remover
-            </span>
-          </div>
-          <div className="justify-self-end" aria-hidden="true" />
-        </div>
-      </header>
+  const readout = isProcessing
+    ? { text: 'Inpainting…', state: 'busy' }
+    : resultUrl
+      ? { text: 'Clean', state: 'on' }
+      : imageUrl
+        ? { text: 'Specimen loaded', state: 'on' }
+        : { text: 'Awaiting specimen', state: 'off' };
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col items-center gap-4">
+  return (
+    <LabShell
+      id="EXP-02"
+      name="Gemini Watermark Remover"
+      icon={Sparkles}
+      readout={readout}
+      className={isProcessing ? 'cursor-wait' : ''}
+    >
+      <div className="mx-auto flex max-w-4xl flex-col items-center gap-5">
         {!imageUrl && (
-          <div className="text-center max-w-2xl mt-4">
-            <p className="text-gray-300">
-              Erase the visible Gemini / Nano Banana watermark from AI-generated images.
-            </p>
-            <p className="text-gray-500 text-sm mt-2">
-              Runs entirely in your browser — your image is never uploaded.
-            </p>
+          <div className="max-w-2xl text-center">
+            <p className="text-ice-200">Erase the visible Gemini / Nano Banana watermark from AI-generated images.</p>
+            <p className="mt-2 text-sm text-ice-400">Runs entirely in your browser — your image is never uploaded.</p>
           </div>
         )}
 
@@ -350,14 +347,11 @@ const GeminiWatermarkRemoverTool = () => {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            className={`w-full max-w-md border-2 border-dashed rounded-2xl px-5 py-10 text-center cursor-pointer transition-all ${
-              isDragOver
-                ? 'border-primary-400 bg-primary-500/5'
-                : 'border-dark-600 hover:border-primary-500/50 hover:bg-dark-800/50'
-            }`}
+            className={`lab-tray lab-corners max-w-md px-6 py-10 ${isDragOver ? 'is-over' : ''}`}
           >
-            <div className="text-base font-semibold mb-1">Drop an image or click to choose</div>
-            <div className="text-gray-400 text-sm">PNG · JPG · WebP — or paste from clipboard</div>
+            <span className="lab-label mb-3 block">Specimen tray</span>
+            <div className="text-base font-semibold text-ice-50">Drop an image here or click to choose</div>
+            <div className="mt-1 font-mono text-[11px] tracking-wide text-ice-400">PNG · JPG · WebP — or paste from clipboard</div>
             <input
               id="gwr-file-input"
               ref={fileInputRef}
@@ -370,10 +364,10 @@ const GeminiWatermarkRemoverTool = () => {
         )}
 
         {imageUrl && (
-          <div className="w-full flex flex-col items-center gap-4">
+          <div className="flex w-full flex-col items-center gap-4">
             <div
               ref={stageRef}
-              className="relative inline-block max-w-full rounded-lg overflow-hidden border border-dark-700 bg-dark-800"
+              className="lab-panel relative inline-block max-w-full overflow-hidden"
               style={{ touchAction: 'none' }}
             >
               <img
@@ -381,14 +375,14 @@ const GeminiWatermarkRemoverTool = () => {
                 src={displaySrc}
                 alt="Working image"
                 onLoad={handleImageLoad}
-                className="block max-w-full max-h-[50vh] w-auto h-auto select-none"
+                className="block h-auto max-h-[50vh] w-auto max-w-full select-none"
                 draggable={false}
               />
               {!resultUrl && naturalSize.w > 0 && (
                 <div
                   onMouseDown={startInteraction('move')}
                   onTouchStart={startInteraction('move')}
-                  className={`absolute border-2 border-primary-400 bg-primary-500/20 cursor-move ${isProcessing ? 'pointer-events-none opacity-60' : ''}`}
+                  className={`absolute cursor-move border-2 border-frost bg-frost/20 ${isProcessing ? 'pointer-events-none opacity-60' : ''}`}
                   style={{
                     left: `${box.x * 100}%`,
                     top: `${box.y * 100}%`,
@@ -404,7 +398,7 @@ const GeminiWatermarkRemoverTool = () => {
                         key={corner}
                         onMouseDown={startInteraction(corner)}
                         onTouchStart={startInteraction(corner)}
-                        className="absolute bg-primary-400 border border-white rounded-sm"
+                        className="absolute rounded-sm border border-abyss bg-frost"
                         style={{
                           width: HANDLE_SIZE,
                           height: HANDLE_SIZE,
@@ -420,74 +414,63 @@ const GeminiWatermarkRemoverTool = () => {
                 </div>
               )}
               {isProcessing && (
-                <div className="absolute inset-0 bg-dark-900/60 backdrop-blur-sm flex flex-col items-center justify-center gap-3 pointer-events-none">
-                  <Loader2 className="w-12 h-12 text-primary-400 animate-spin" />
-                  <span className="text-sm text-gray-200">{status}</span>
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 bg-abyss/70 backdrop-blur-sm">
+                  <Loader2 className="h-10 w-10 animate-spin text-frost" />
+                  <span className="lab-readout">{status}</span>
                 </div>
               )}
             </div>
 
-            <div className="text-gray-500 text-xs text-center max-w-md flex items-center justify-center gap-2 flex-wrap">
+            <div className="lab-readout flex max-w-md flex-wrap items-center justify-center gap-2 text-center text-ice-400">
               {naturalSize.w > 0 && (
                 <>
-                  <span className="text-gray-400">{naturalSize.w} × {naturalSize.h}px</span>
-                  <span className="text-gray-700">·</span>
+                  <span className="text-ice-200">{naturalSize.w} × {naturalSize.h} px</span>
+                  <span className="text-ice-400/50">·</span>
                 </>
               )}
               <span>
                 {resultUrl
-                  ? 'Cleaned image — original resolution preserved on download.'
-                  : 'Drag the box or corners to cover the watermark precisely.'}
+                  ? 'Cleaned — original resolution is kept on download.'
+                  : 'Drag the box or its corners to cover the watermark.'}
               </span>
             </div>
           </div>
         )}
 
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="flex flex-wrap justify-center gap-3">
           {!resultUrl && (
-            <button
-              type="button"
-              onClick={handleRemove}
-              disabled={!imageUrl || isProcessing}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 disabled:bg-dark-600 disabled:cursor-not-allowed disabled:text-gray-500 text-white rounded-lg font-medium transition-all"
-            >
-              {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+            <button type="button" onClick={handleRemove} disabled={!imageUrl || isProcessing} className="lab-btn">
+              {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
               {isProcessing ? 'Working…' : 'Remove watermark'}
             </button>
           )}
           {resultUrl && (
-            <button
-              type="button"
-              onClick={handleDownload}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-all"
-            >
-              <Download className="w-4 h-4" />
+            <button type="button" onClick={handleDownload} className="lab-btn">
+              <Download className="h-4 w-4" />
               Download PNG
             </button>
           )}
-          <button
-            type="button"
-            onClick={handleReset}
-            disabled={!imageUrl}
-            className="inline-flex items-center gap-2 px-6 py-3 border border-dark-600 hover:border-gray-400 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
+          <button type="button" onClick={handleReset} disabled={!imageUrl} className="lab-btn-ghost">
+            <RotateCcw className="h-4 w-4" />
             Reset
           </button>
         </div>
 
-        <div className="text-gray-400 text-sm text-center min-h-[1.2em]">{status}</div>
+        <div className="lab-readout flex min-h-[1.2em] items-center gap-2 text-center">
+          <span className={`lab-led ${isProcessing ? 'lab-led-warn animate-pulse' : imageUrl ? 'lab-led-on' : ''}`} aria-hidden />
+          {status}
+        </div>
 
-        <p className="text-xs text-gray-600 text-center max-w-xl">
+        <p className="max-w-xl text-center text-xs text-ice-400">
           Removes the visible Gemini logo only. Google also embeds an invisible SynthID watermark — please don&apos;t use this to misrepresent AI-generated content as human-made.
         </p>
-        <p className="text-[11px] text-gray-700 text-center">
+        <p className="text-center font-mono text-[10px] tracking-wide text-ice-400/70">
           Inpainting by{' '}
           <a
             href="https://github.com/Picsart-AI-Research/MI-GAN"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline hover:text-gray-500"
+            className="underline transition-colors hover:text-frost"
           >
             MI-GAN
           </a>
@@ -496,13 +479,13 @@ const GeminiWatermarkRemoverTool = () => {
             href="/models/LICENSE-MIGAN.txt"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline hover:text-gray-500"
+            className="underline transition-colors hover:text-frost"
           >
             License
           </a>
         </p>
-      </main>
-    </div>
+      </div>
+    </LabShell>
   );
 };
 

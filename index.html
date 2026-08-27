@@ -29,6 +29,8 @@
           s = m >= 3 && m <= 5 ? 'spring' : m >= 6 && m <= 8 ? 'summer' : m >= 9 && m <= 11 ? 'autumn' : 'winter';
         }
         document.documentElement.setAttribute('data-season', s);
+        // The lab has no weather: a fixed palette (mirrors src/pages/lab/useLabPalette.js)
+        if (/^\/lab(\/|$)/.test(location.pathname)) document.documentElement.setAttribute('data-lab', '');
       })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/logo.png" />

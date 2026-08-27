@@ -103,7 +103,7 @@ const Navbar = () => {
 
         <div className="hidden md:block">
           {EXTERNAL_NAV_LINKS.map((link) => (
-            <LabLinkButton key={link.id} to={link.href} direction="forward" />
+            <LabLinkButton key={link.id} to={link.href} />
           ))}
         </div>
 
@@ -153,12 +153,7 @@ const Navbar = () => {
             <div className="hairline my-2" aria-hidden />
             <div className="px-2 py-1">
               {EXTERNAL_NAV_LINKS.map((link) => (
-                <LabLinkButton
-                  key={link.id}
-                  to={link.href}
-                  direction="forward"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                />
+                <LabLinkButton key={link.id} to={link.href} onClick={() => setIsMobileMenuOpen(false)} />
               ))}
             </div>
             <div className="hairline my-2" aria-hidden />

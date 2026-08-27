@@ -59,6 +59,21 @@
   --c-aurora: 255 77 141;
   --c-mint: 181 229 106;
 }
+:root[data-lab] {
+  /* the lab has no weather — graphite bench, amber instruments, lime LEDs
+     (set by src/pages/lab/useLabPalette.js and the bootstrap in index.html) */
+  --c-abyss: 14 20 18;
+  --c-deep: 21 29 26;
+  --c-ice-50: 242 247 243;
+  --c-ice-100: 233 240 234;
+  --c-ice-200: 201 214 205;
+  --c-ice-300: 167 181 172;
+  --c-ice-400: 138 154 144;
+  --c-frost: 255 176 46;
+  --c-glacier: 184 240 90;
+  --c-aurora: 255 106 61;
+  --c-mint: 184 240 90;
+}
 
 @layer base {
   * {
@@ -107,11 +122,6 @@
 }
 
 @layer utilities {
-  /* Legacy utilities (still used by /lab pages) */
-  .text-gradient {
-    @apply bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent;
-  }
-
   .section-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20;
   }
@@ -269,5 +279,156 @@
     box-shadow:
       0 0 0 3px rgb(var(--c-frost) / 0.14),
       0 0 28px -4px rgb(var(--c-frost) / 0.85);
+  }
+}
+
+/* ---------- Lab (the bench) ---------- */
+/* /lab pages carry <html data-lab> (see the palette block above). Their
+   material is not ice and glass but a workbench: matte panels, an etched
+   grid, mono labels, ruler ticks, LEDs, hazard tape. */
+@layer utilities {
+  .lab-grid {
+    background-image:
+      linear-gradient(to right, rgb(190 215 200 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(190 215 200 / 0.045) 1px, transparent 1px),
+      linear-gradient(to right, rgb(190 215 200 / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(190 215 200 / 0.08) 1px, transparent 1px);
+    background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  }
+
+  .lab-label {
+    @apply font-mono text-[10px] uppercase tracking-[0.28em] text-ice-400;
+  }
+
+  .lab-readout {
+    @apply font-mono text-xs tracking-wide text-ice-200;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lab-tag {
+    @apply inline-flex items-center rounded border border-white/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-ice-300;
+  }
+
+  .lab-panel {
+    @apply relative rounded-lg border border-white/[0.08] bg-deep;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  /* Viewfinder brackets in the four corners of a box */
+  .lab-corners {
+    position: relative;
+  }
+  .lab-corners::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    pointer-events: none;
+    --lc: rgb(var(--c-frost) / 0.8);
+    --ls: 14px;
+    --lt: 1.5px;
+    background-image:
+      linear-gradient(var(--lc), var(--lc)), linear-gradient(var(--lc), var(--lc)),
+      linear-gradient(var(--lc), var(--lc)), linear-gradient(var(--lc), var(--lc)),
+      linear-gradient(var(--lc), var(--lc)), linear-gradient(var(--lc), var(--lc)),
+      linear-gradient(var(--lc), var(--lc)), linear-gradient(var(--lc), var(--lc));
+    background-size:
+      var(--ls) var(--lt), var(--lt) var(--ls),
+      var(--ls) var(--lt), var(--lt) var(--ls),
+      var(--ls) var(--lt), var(--lt) var(--ls),
+      var(--ls) var(--lt), var(--lt) var(--ls);
+    background-position:
+      left top, left top,
+      right top, right top,
+      left bottom, left bottom,
+      right bottom, right bottom;
+    background-repeat: no-repeat;
+  }
+
+  /* Ruler strip: a minor tick every 8px, a major one every 40px */
+  .lab-ticks {
+    height: 10px;
+    background-image:
+      repeating-linear-gradient(90deg, rgb(var(--c-ice-400) / 0.6) 0 1px, transparent 1px 40px),
+      repeating-linear-gradient(90deg, rgb(var(--c-ice-400) / 0.3) 0 1px, transparent 1px 8px);
+    background-size: 100% 100%, 100% 50%;
+    background-repeat: no-repeat;
+  }
+
+  /* Hazard tape: amber for "reserved", the warning variant for "restricted" */
+  .lab-hazard {
+    background-image: repeating-linear-gradient(135deg, rgb(var(--c-frost) / 0.8) 0 10px, transparent 10px 20px);
+  }
+  .lab-hazard-warn {
+    background-image: repeating-linear-gradient(135deg, rgb(var(--c-aurora) / 0.85) 0 10px, rgb(var(--c-abyss)) 10px 20px);
+  }
+
+  .lab-led {
+    @apply inline-block h-2 w-2 shrink-0 rounded-full;
+    background: rgb(var(--c-ice-400) / 0.45);
+  }
+  .lab-led-on {
+    background: rgb(var(--c-glacier));
+    box-shadow: 0 0 8px rgb(var(--c-glacier) / 0.9);
+  }
+  .lab-led-warn {
+    background: rgb(var(--c-frost));
+    box-shadow: 0 0 8px rgb(var(--c-frost) / 0.9);
+  }
+
+  .lab-btn {
+    @apply inline-flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold text-abyss transition-colors duration-200;
+    background: rgb(var(--c-frost));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 8px 24px -12px rgb(var(--c-frost) / 0.8);
+  }
+  .lab-btn:hover:not(:disabled) {
+    background: rgb(255 195 90);
+  }
+  .lab-btn:disabled {
+    @apply cursor-not-allowed;
+    background: rgb(var(--c-ice-400) / 0.18);
+    color: rgb(var(--c-ice-400));
+    box-shadow: none;
+  }
+
+  .lab-btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-md border border-white/15 px-5 py-2.5 text-sm font-medium text-ice-100 transition-colors duration-200;
+  }
+  .lab-btn-ghost:hover:not(:disabled) {
+    @apply border-frost/60 text-ice-50;
+    background: rgb(var(--c-frost) / 0.08);
+  }
+  .lab-btn-ghost:disabled {
+    @apply cursor-not-allowed opacity-40;
+  }
+
+  /* Segmented switch */
+  .lab-seg {
+    @apply inline-flex overflow-hidden rounded-md border border-white/15;
+  }
+  .lab-seg-btn {
+    @apply px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-ice-300 transition-colors;
+  }
+  .lab-seg-btn + .lab-seg-btn {
+    @apply border-l border-white/15;
+  }
+  .lab-seg-btn:hover {
+    @apply text-ice-50;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .lab-seg-btn[aria-pressed='true'] {
+    @apply text-abyss;
+    background: rgb(var(--c-frost));
+  }
+
+  /* Drop zone */
+  .lab-tray {
+    @apply block w-full cursor-pointer rounded-lg border border-dashed border-white/20 text-center transition-colors duration-200;
+  }
+  .lab-tray:hover,
+  .lab-tray.is-over {
+    @apply border-frost/70;
+    background: rgb(var(--c-frost) / 0.05);
   }
 }

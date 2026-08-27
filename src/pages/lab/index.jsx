@@ -1,19 +1,29 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Smartphone, FlaskConical } from 'lucide-react';
-import Logo from '../../components/Logo';
+import { ArrowUpRight, FlaskConical, Smartphone } from 'lucide-react';
+import LabShell from './LabShell';
 import { useSeo } from '../../hooks/useSeo';
 
+// Experiments are numbered in the order they went on the bench. EXP-02 exists
+// but is restricted (not listed), so the open slot is EXP-03.
 const TOOLS = [
   {
+    id: 'EXP-01',
     slug: 'phoneframe',
     title: 'PhoneFrame',
-    description: 'Upload an image to wrap it in a phone mockup frame and download as PNG. Auto-detects portrait or landscape.',
+    description: 'Wrap a screenshot in a phone mockup and download it as a PNG. Portrait or landscape is detected for you.',
     icon: Smartphone,
     thumbnail: '/labs/phoneframe.png',
-    tags: ['Image', 'Mockup', 'Export'],
+    specs: ['Image', 'Mockup', 'PNG export'],
   },
 ];
+const NEXT_SLOT = 'EXP-03';
+
+const reveal = (delay) => ({
+  initial: { opacity: 0, y: 14 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] },
+});
 
 const Lab = () => {
   useSeo({
@@ -30,98 +40,79 @@ const Lab = () => {
   });
 
   return (
-    <div className="min-h-screen bg-dark-900 text-white">
-      <header className="border-b border-dark-700 bg-dark-800/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 grid grid-cols-3 items-center">
-          <div className="justify-self-start">
-            <Logo to="/" />
-          </div>
-          <div className="justify-self-center inline-flex items-center gap-2">
-            <FlaskConical className="w-6 h-6 text-primary-400" />
-            <span className="text-2xl font-bold text-gradient tracking-wide">Lab</span>
-          </div>
-          <div className="justify-self-end" aria-hidden="true" />
-        </div>
-      </header>
+    <LabShell
+      name="Lab"
+      icon={FlaskConical}
+      back="/"
+      backLabel="DG.DEV"
+      readout={{ text: `${TOOLS.length} experiment${TOOLS.length === 1 ? '' : 's'} live`, state: 'on' }}
+    >
+      <motion.section {...reveal(0)} className="mb-12 max-w-2xl">
+        <p className="lab-label mb-4">Bench · browser-only tools</p>
+        <h1 className="font-display text-4xl font-extrabold tracking-tight text-ice-50 sm:text-5xl" style={{ textWrap: 'balance' }}>
+          Small tools, run on your own machine.
+        </h1>
+        <p className="mt-4 text-base leading-relaxed text-ice-300">
+          Each one does a single job inside this browser tab. Nothing is uploaded and there is nothing to sign up for —
+          pick a specimen and try it.
+        </p>
+      </motion.section>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
-          <p className="text-gray-400 text-lg max-w-2xl">
-            Compact web tools built for everyday tasks — pick one and try it out.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {TOOLS.map((tool, idx) => {
-            const Icon = tool.icon;
-            return (
-              <motion.div
-                key={tool.slug}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 + idx * 0.08 }}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        {TOOLS.map((tool, idx) => {
+          const Icon = tool.icon;
+          return (
+            <motion.div key={tool.slug} {...reveal(0.1 + idx * 0.08)}>
+              <Link
+                to={`/lab/${tool.slug}`}
+                className="lab-panel group block h-full overflow-hidden transition-colors duration-300 hover:border-frost/50"
               >
-                <Link
-                  to={`/lab/${tool.slug}`}
-                  className="group block h-full bg-dark-700 hover:bg-dark-600/80 border border-dark-600 hover:border-primary-500/40 rounded-xl overflow-hidden transition-all"
-                >
-                  {tool.thumbnail ? (
-                    <div className="relative aspect-[2/1] bg-dark-800 overflow-hidden">
-                      <img
-                        src={tool.thumbnail}
-                        alt={`${tool.title} preview`}
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                      />
-                    </div>
-                  ) : null}
-                  <div className="p-6">
-                    {!tool.thumbnail && (
-                      <div className="mb-4">
-                        <div className="w-12 h-12 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/20 transition-colors">
-                          <Icon className="w-6 h-6" />
-                        </div>
-                      </div>
-                    )}
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary-400 transition-colors">
-                      {tool.title}
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                      {tool.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {tool.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2.5 py-1 bg-dark-800 text-gray-400 text-xs rounded-md"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                {tool.thumbnail ? (
+                  <div className="lab-corners aspect-[2/1] overflow-hidden bg-abyss">
+                    <img
+                      src={tool.thumbnail}
+                      alt={`${tool.title} preview`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
                   </div>
-                </Link>
-              </motion.div>
-            );
-          })}
+                ) : (
+                  <div className="lab-corners grid aspect-[2/1] place-items-center bg-abyss text-frost">
+                    <Icon className="h-8 w-8" />
+                  </div>
+                )}
+                <div className="p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="lab-label text-frost/80">{tool.id}</span>
+                    <ArrowUpRight className="h-4 w-4 text-ice-400 transition-colors group-hover:text-frost" />
+                  </div>
+                  <h2 className="mt-2 font-display text-xl font-extrabold tracking-tight text-ice-50">{tool.title}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-ice-300">{tool.description}</p>
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {tool.specs.map((spec) => (
+                      <span key={spec} className="lab-tag">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 + TOOLS.length * 0.08 }}
-            className="bg-dark-800/40 border border-dashed border-dark-600 rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[200px]"
-          >
-            <div className="text-gray-500 mb-2 text-3xl">+</div>
-            <p className="text-gray-500 text-sm">More tools coming soon</p>
-          </motion.div>
-        </div>
-      </main>
-    </div>
+        <motion.div
+          {...reveal(0.1 + TOOLS.length * 0.08)}
+          className="lab-panel flex min-h-[220px] flex-col overflow-hidden border-dashed"
+        >
+          <div className="lab-hazard h-1.5 opacity-60" aria-hidden />
+          <div className="flex flex-1 flex-col justify-center gap-2 p-5">
+            <span className="lab-label text-frost/80">{NEXT_SLOT} · reserved</span>
+            <p className="text-sm leading-relaxed text-ice-300">The next experiment is on the bench. Check back later.</p>
+          </div>
+        </motion.div>
+      </div>
+    </LabShell>
   );
 };
 
