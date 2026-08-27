@@ -75,10 +75,13 @@ const SeasonLogo = ({ logo = SEASONS.winter.logo }) => {
   useEffect(() => () => backdrop.dispose(), [backdrop]);
 
   const isNarrow = viewport.width < 8;
-  const targetWidth = isNarrow ? viewport.width * 0.66 : viewport.height * 0.76;
+  const targetWidth = isNarrow ? viewport.width * 0.5 : viewport.height * 0.6;
   const scale = targetWidth / RAW_WIDTH;
-  const x = isNarrow ? 0 : viewport.width * 0.04;
-  const y = isNarrow ? viewport.height * 0.26 : 0.1;
+  // Narrow (portrait-ish canvas: phones, tablets, squarish windows): centred
+  // above the copy, between the nav and the status pill. Wide: right of
+  // centre, beside the headline.
+  const x = isNarrow ? 0 : viewport.width * 0.14;
+  const y = isNarrow ? viewport.height * 0.3 : -0.2;
 
   return (
     <group scale={scale} position={[x, y, 0]} rotation={[0.1, -0.28, 0]}>

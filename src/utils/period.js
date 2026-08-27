@@ -12,14 +12,19 @@ const monthLabel = ({ y, m }) => `${MONTHS[m - 1]} ${y}`;
 
 const plural = (n, unit) => `${n} ${unit}${n === 1 ? '' : 's'}`;
 
+/** Inclusive number of months between two 'YYYY-MM' months (`end` null = now). */
+export const monthsBetween = (start, end = null) => {
+  const a = parseMonth(start);
+  const b = end ? parseMonth(end) : { y: NOW.getFullYear(), m: NOW.getMonth() + 1 };
+  return Math.max(1, (b.y - a.y) * 12 + (b.m - a.m) + 1);
+};
+
 /**
  * Inclusive duration between two 'YYYY-MM' months, e.g. Jan 2024 → Nov 2025
  * is "1 year 11 months" (both endpoint months count).
  */
 export const formatDuration = (start, end = null) => {
-  const a = parseMonth(start);
-  const b = end ? parseMonth(end) : { y: NOW.getFullYear(), m: NOW.getMonth() + 1 };
-  const total = Math.max(1, (b.y - a.y) * 12 + (b.m - a.m) + 1);
+  const total = monthsBetween(start, end);
   const years = Math.floor(total / 12);
   const months = total % 12;
   const parts = [];
