@@ -113,7 +113,7 @@ export const TECH_STACK = {
 
 // Contact Information
 export const CONTACT_INFO = {
-  email: 'sudongcu.work@gmail.com',
+  email: 'sudongcu@gmail.com',
   github: 'https://github.com/sudongcu',
   linkedin: 'https://www.linkedin.com/in/dongguseo/'
 };
