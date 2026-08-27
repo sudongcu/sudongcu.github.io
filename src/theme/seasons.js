@@ -12,7 +12,7 @@
  *   spring  blossom + fresh green        summer  ocean + orange
  *   autumn  sunset + falling leaves      winter  glacier (frost + snow)
  */
-import { Flower2, Leaf, Snowflake, Sun } from 'lucide-react';
+import { Flower, Snowflake, Sun, Wheat } from 'lucide-react';
 
 export const SEASON_IDS = ['spring', 'summer', 'autumn', 'winter'];
 
@@ -67,7 +67,7 @@ export const SEASONS = {
     id: 'spring',
     label: 'Spring',
     tagline: 'Blossom — vines & petals',
-    Icon: Flower2,
+    Icon: Flower,
     logo: {
       tint: '#ffe6f0',
       tintMix: 0.7,
@@ -131,7 +131,7 @@ export const SEASONS = {
     id: 'autumn',
     label: 'Autumn',
     tagline: 'Sunset — branches & leaves',
-    Icon: Leaf,
+    Icon: Wheat,
     logo: {
       tint: '#ffe9d1',
       tintMix: 0.75,
