@@ -161,7 +161,7 @@ const Hero = () => {
 
       {/* Content */}
       <motion.div
-        className="section-container relative z-10 flex min-h-screen flex-col justify-end pb-32 pt-36"
+        className="section-container relative z-10 flex min-h-screen flex-col justify-end pb-32 pt-36 lg:justify-center lg:pb-28 lg:pt-28"
         initial="hidden"
         animate="visible"
       >

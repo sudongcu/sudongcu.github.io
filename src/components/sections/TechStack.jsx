@@ -53,7 +53,7 @@ const TechStack = () => (
         Bars · years in production, from the timeline above · longest {formatTenure(MAX_MONTHS)}
       </motion.p>
 
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
         {CATEGORIES.map((category, i) => {
           const Icon = CATEGORY_ICONS[category.key];
           return (

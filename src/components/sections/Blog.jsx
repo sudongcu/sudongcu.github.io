@@ -88,7 +88,7 @@ const Blog = () => {
 
         <div className="mt-14">
           {loading ? (
-            <div className="grid gap-5 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               <Skeleton />
               <Skeleton />
               <Skeleton />
@@ -102,11 +102,11 @@ const Blog = () => {
               .
             </p>
           ) : (
-            <div className="grid gap-5 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {posts.map((post, index) => (
                 <motion.article
                   key={post.guid ?? post.link ?? index}
-                  className="h-full"
+                  className="h-full min-w-0"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-60px' }}
