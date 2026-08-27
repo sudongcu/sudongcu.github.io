@@ -1,57 +1,59 @@
-import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Html, useProgress } from '@react-three/drei';
-import AnimatedModel from './AnimatedObject';
+import { Suspense, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Environment, Float, Lightformer, Sparkles } from '@react-three/drei';
+import SeasonLogo from './AnimatedObject';
+import { SEASONS } from '../../theme/seasons';
 
-const Loader = () => {
-  const { progress } = useProgress();
-  return (
-    <Html center>
-      <div className="text-primary-400 text-sm">
-        {progress.toFixed(0)}% loaded
-      </div>
-    </Html>
-  );
+/** Eases the logo toward the cursor position (normalized -1..1). */
+const Rig = ({ pointerRef, children }) => {
+  const group = useRef(null);
+
+  useFrame((_, delta) => {
+    const g = group.current;
+    if (!g) return;
+    const p = pointerRef?.current ?? { x: 0, y: 0 };
+    const k = 1 - Math.pow(0.002, delta); // frame-rate independent easing
+    g.rotation.y += (p.x * 0.38 - g.rotation.y) * k;
+    g.rotation.x += (-p.y * 0.26 - g.rotation.x) * k;
+    g.position.x += (p.x * 0.35 - g.position.x) * k;
+    g.position.y += (p.y * 0.22 - g.position.y) * k;
+  });
+
+  return <group ref={group}>{children}</group>;
 };
 
-const HeroCanvas = () => {
+const HeroCanvas = ({ pointerRef, season = 'winter' }) => {
+  const { logo } = SEASONS[season] ?? SEASONS.winter;
   return (
     <Canvas
-      className="w-full h-full"
-      dpr={[1, 2]}
-      gl={{ 
-        alpha: true, 
-        antialias: true,
-        powerPreference: 'high-performance'
-      }}
+      dpr={[1, 1.5]}
+      camera={{ position: [0, 0, 9], fov: 45 }}
+      gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+      style={{ pointerEvents: 'none' }}
     >
-      <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={60} />
-      
-      {/* Lighting */}
-      <ambientLight intensity={0.9} />
-      <directionalLight position={[10, 10, 5]} intensity={1.5} />
-      <pointLight position={[-10, -10, -5]} intensity={0.5} color="#0ea5e9" />
-      <spotLight
-        position={[5, 5, 5]}
-        angle={0.3}
-        penumbra={1}
-        intensity={1}
-        castShadow
-      />
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[6, 8, 6]} intensity={1.4} color={logo.lights.key} />
+      <pointLight position={[-6, -4, 4]} intensity={24} distance={22} color={logo.lights.fillA} />
+      <pointLight position={[5, -5, -4]} intensity={16} distance={22} color={logo.lights.fillB} />
 
-      {/* 3D Model */}
-      <Suspense fallback={<Loader />}>
-        <AnimatedModel />
+      <Suspense fallback={null}>
+        <Rig pointerRef={pointerRef}>
+          <Float speed={1.4} rotationIntensity={0.35} floatIntensity={0.9} floatingRange={[-0.25, 0.25]}>
+            <SeasonLogo logo={logo} />
+          </Float>
+        </Rig>
+
+        {/* Drifting motes (ice crystals, pollen, sun glints, embers) */}
+        <Sparkles count={110} scale={[16, 9, 6]} size={2.2} speed={0.25} opacity={0.55} color={logo.sparkles} />
+
+        {/* Procedural environment for reflections (no network fetch); remounted per season */}
+        <Environment key={season} resolution={256} frames={1}>
+          <Lightformer form="rect" intensity={3} color={logo.env[0]} position={[0, 5, -5]} scale={[10, 2, 1]} />
+          <Lightformer form="rect" intensity={2} color={logo.env[1]} position={[-6, 0, 2]} rotation={[0, Math.PI / 2, 0]} scale={[6, 4, 1]} />
+          <Lightformer form="rect" intensity={1.5} color={logo.env[2]} position={[6, -2, 2]} rotation={[0, -Math.PI / 2, 0]} scale={[6, 4, 1]} />
+          <Lightformer form="ring" intensity={2} color="#ffffff" position={[0, 0, 6]} scale={3} />
+        </Environment>
       </Suspense>
-
-      {/* Controls - Enable rotation with mouse drag */}
-      <OrbitControls 
-        enableZoom={true} 
-        enablePan={true}
-        rotateSpeed={0.5}
-        minPolarAngle={Math.PI / 3}
-        maxPolarAngle={Math.PI - Math.PI / 3}
-      />
     </Canvas>
   );
 };

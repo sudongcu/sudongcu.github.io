@@ -2,27 +2,272 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Seasonal palette (RGB triplets so Tailwind alpha modifiers work) ---------- */
+:root {
+  /* winter — glacier (default) */
+  --c-abyss: 5 11 22;
+  --c-deep: 8 19 36;
+  --c-ice-50: 244 250 255;
+  --c-ice-100: 228 242 255;
+  --c-ice-200: 201 230 255;
+  --c-ice-300: 163 214 255;
+  --c-ice-400: 124 196 255;
+  --c-frost: 127 230 255;
+  --c-glacier: 76 201 240;
+  --c-aurora: 139 156 255;
+  --c-mint: 143 245 224;
+}
+:root[data-season='spring'] {
+  /* blossom + fresh green on a plum night */
+  --c-abyss: 12 10 20;
+  --c-deep: 20 16 31;
+  --c-ice-50: 255 247 251;
+  --c-ice-100: 255 238 245;
+  --c-ice-200: 245 215 230;
+  --c-ice-300: 237 184 210;
+  --c-ice-400: 229 156 192;
+  --c-frost: 255 166 201;
+  --c-glacier: 155 231 168;
+  --c-aurora: 201 166 255;
+  --c-mint: 168 240 176;
+}
+:root[data-season='summer'] {
+  /* deep ocean, turquoise water, orange sun */
+  --c-abyss: 3 17 26;
+  --c-deep: 6 34 48;
+  --c-ice-50: 244 253 255;
+  --c-ice-100: 224 249 255;
+  --c-ice-200: 189 239 255;
+  --c-ice-300: 143 227 255;
+  --c-ice-400: 95 211 255;
+  --c-frost: 41 227 211;
+  --c-glacier: 255 138 61;
+  --c-aurora: 59 130 246;
+  --c-mint: 125 255 179;
+}
+:root[data-season='autumn'] {
+  /* dusk sky, gold → coral → magenta sunset, warm cream text */
+  --c-abyss: 15 9 26;
+  --c-deep: 27 15 38;
+  --c-ice-50: 255 248 240;
+  --c-ice-100: 255 239 223;
+  --c-ice-200: 248 217 184;
+  --c-ice-300: 240 191 138;
+  --c-ice-400: 232 167 96;
+  --c-frost: 255 200 87;
+  --c-glacier: 255 122 69;
+  --c-aurora: 255 77 141;
+  --c-mint: 181 229 106;
+}
+
 @layer base {
   * {
     @apply box-border m-0 p-0;
   }
 
-  body {
-    @apply bg-dark-900 text-white font-sans antialiased;
-    @apply overflow-x-hidden;
-  }
-
   html {
     @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-abyss text-ice-100 font-sans antialiased;
+    @apply overflow-x-hidden;
+    transition: background-color 0.8s ease, color 0.8s ease;
+  }
+
+  ::selection {
+    background: rgb(var(--c-frost) / 0.35);
+    color: rgb(var(--c-ice-50));
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--c-abyss));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-frost) / 0.18);
+    border-radius: 999px;
+    border: 3px solid rgb(var(--c-abyss));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--c-frost) / 0.35);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
 @layer utilities {
+  /* Legacy utilities (still used by /lab pages) */
   .text-gradient {
     @apply bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent;
   }
 
   .section-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20;
+  }
+
+  /* ---------- Glacier design system ---------- */
+
+  /* Shimmering ice gradient text */
+  .text-ice {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      110deg,
+      rgb(var(--c-ice-50)) 0%,
+      rgb(var(--c-ice-200)) 28%,
+      rgb(var(--c-frost)) 52%,
+      rgb(var(--c-aurora)) 78%,
+      rgb(var(--c-ice-50)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 8s ease-in-out infinite;
+  }
+
+  /* Frosted glass panel. Positioned via :where() so an explicit `absolute` /
+     `fixed` on the same element (dropdowns, menus) still wins. */
+  :where(.glass) {
+    position: relative;
+  }
+  .glass {
+    @apply rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      0 30px 80px -30px rgba(0, 0, 0, 0.7);
+  }
+  /* Resting look: a slab of clear ice — a cool specular sheen from the top-left
+     and a faint glacier tint pooling in the far corner. Sits under content. */
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: inherit;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.025) 26%, transparent 52%),
+      radial-gradient(120% 90% at 100% 100%, rgb(var(--c-frost) / 0.07), transparent 60%);
+  }
+
+  .glass-hover {
+    @apply transition-all duration-500;
+  }
+  .glass-hover:hover {
+    @apply border-frost/40 bg-white/[0.07];
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+      0 0 0 1px rgb(var(--c-frost) / 0.12),
+      0 40px 90px -30px rgb(var(--c-glacier) / 0.35);
+  }
+
+  .section-label {
+    @apply font-mono text-[11px] uppercase tracking-[0.32em] text-frost/70;
+  }
+
+  .hairline {
+    @apply h-px w-full;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+  }
+
+  .aurora-blob {
+    @apply pointer-events-none absolute rounded-full mix-blend-screen;
+    filter: blur(80px);
+    will-change: transform;
+  }
+
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  .noise {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-sm text-ice-200 transition-colors duration-300;
+  }
+  .chip:hover {
+    @apply border-frost/50 bg-frost/10 text-ice-50;
+  }
+
+  .btn-frost {
+    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-abyss transition-all duration-300;
+    background-image: linear-gradient(120deg, rgb(var(--c-ice-100)) 0%, rgb(var(--c-frost)) 50%, rgb(var(--c-aurora)) 100%);
+    background-size: 200% 100%;
+    box-shadow:
+      0 10px 40px -10px rgb(var(--c-frost) / 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  .btn-frost:hover {
+    background-position: 100% 50%;
+    transform: translateY(-1px);
+    box-shadow:
+      0 16px 50px -10px rgb(var(--c-frost) / 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 font-medium text-ice-100 backdrop-blur-md transition-all duration-300;
+  }
+  .btn-ghost:hover {
+    @apply border-frost/50 bg-frost/10 text-ice-50;
+  }
+
+  /* Slow breathing halo in the season's accent (season switch controls) */
+  .season-glow {
+    animation: season-breathe 3.2s ease-in-out infinite;
+  }
+
+  .link-underline {
+    @apply relative inline-flex items-center gap-2 text-ice-50;
+  }
+  .link-underline::after {
+    content: '';
+    @apply absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-frost transition-transform duration-500;
+  }
+  .link-underline:hover::after {
+    @apply scale-x-100;
+  }
+}
+
+/* ---------- Frost (성에) ---------- */
+/* Frost, ice showers and symbol formation are drawn on a canvas (IceLayer);
+   the host only needs to clip to its rounded corners and isolate stacking. */
+@layer utilities {
+  .frost {
+    overflow: hidden;
+    isolation: isolate;
+  }
+}
+
+@keyframes season-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(var(--c-frost) / 0),
+      0 0 18px -6px rgb(var(--c-frost) / 0.55);
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px rgb(var(--c-frost) / 0.14),
+      0 0 28px -4px rgb(var(--c-frost) / 0.85);
   }
 }
