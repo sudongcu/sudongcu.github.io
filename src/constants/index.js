@@ -15,12 +15,12 @@ export const EXTERNAL_NAV_LINKS = [
 export const EXPERIENCES = [
   {
     id: 5,
-    title: 'Co-founder & Lead Research Engineer',
+    title: 'Founding Engineer & Dev Lead',
     company: 'SportsDaddy',
     symbol: 'bowling',
     start: '2026-03',
     end: null,
-    description: 'Driving the entire product end-to-end as co-founder. With AI as my daily partner, I single-handedly take care of planning, design, development, QA, and infrastructure.',
+    description: 'Driving the entire product end-to-end as founding engineer. With Claude Code as my daily partner — extended with subagents and skills I write for my own workflow — I single-handedly take care of planning, design, development, QA, and infrastructure.',
     technologies: ['.NET', 'React', 'Flutter', 'Claude Code', 'AWS', 'MySQL', 'Docker', 'Git', 'Valkey']
   },
   {
@@ -120,7 +120,7 @@ export const CONTACT_INFO = {
 
 // Hero Section Text
 export const HERO_TEXT = {
-  eyebrow: 'Co-founder · Full-stack · Seoul',
+  eyebrow: 'Founding engineer · Dev lead · Full-stack · Seoul',
   status: 'Available for new things',
   name: ['DONGGU', 'SEO'],
   description:
@@ -137,7 +137,7 @@ export const HERO_TICKER = [
 
 // About Section
 export const ABOUT_TEXT =
-  "Hi, I'm Donggu Seo — developer and startup co-founder. After 12 years of development and team leadership, I now build every part of the product solo, with Claude as my daily partner. I make things, ship them, and learn fast.";
+  "Hi, I'm Donggu Seo — developer and founding engineer at a startup. After 12 years of development and team leadership, I now build every part of the product solo, with Claude as my daily partner and a set of subagents and skills I built to make it work my way. I make things, ship them, and learn fast.";
 
 export const ABOUT_STATS = [
   { value: 12, suffix: '+', label: 'years shipping software' },
