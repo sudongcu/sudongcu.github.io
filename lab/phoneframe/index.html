@@ -15,6 +15,22 @@
         }
       }(window.location))
     </script>
+    <!-- Seasonal theme: ?season=… wins, then the saved choice, else the calendar (mirrors src/theme/SeasonProvider.jsx) -->
+    <script>
+      (function () {
+        var seasons = ['spring', 'summer', 'autumn', 'winter'];
+        var s = null;
+        try {
+          s = new URLSearchParams(location.search).get('season');
+          if (seasons.indexOf(s) < 0) s = localStorage.getItem('dg.season');
+        } catch (e) { s = null; }
+        if (seasons.indexOf(s) < 0) {
+          var m = new Date().getMonth() + 1;
+          s = m >= 3 && m <= 5 ? 'spring' : m >= 6 && m <= 8 ? 'summer' : m >= 9 && m <= 11 ? 'autumn' : 'winter';
+        }
+        document.documentElement.setAttribute('data-season', s);
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
@@ -31,10 +47,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
     
-    <script type="module" crossorigin src="/assets/index-C1-bF5NA.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-ruhR-tRE.css">
+    <script type="module" crossorigin src="/assets/index-BPhrDQ_y.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BC0psy6a.css">
   
     <title>PhoneFrame — Free iPhone Mockup Generator | DG.DEV Lab</title>
     <meta name="description" content="Wrap any screenshot in a realistic iPhone-style mockup frame. Free, browser-based, no uploads. Export as PNG in seconds." />
