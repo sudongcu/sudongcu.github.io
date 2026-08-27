@@ -133,13 +133,18 @@ export default class IceScene {
   }
 
   loop(now) {
-    const dt = Math.min((now - this.last) / 1000, 0.05);
+    // Release the handle before drawing: if a frame throws, the next start()
+    // must still be able to schedule a new one instead of seeing a stale id.
+    this.raf = 0;
+    // The rAF timestamp can precede the performance.now() taken in start() by
+    // a frame or more after a heavy frame; a negative dt would push a fresh
+    // ring's life below zero and hand arc() a negative radius.
+    const dt = Math.min(Math.max(0, (now - this.last) / 1000), 0.05);
     this.last = now;
     this.time += dt;
     this.update(dt);
     this.draw();
     if (this.alive()) this.raf = requestAnimationFrame(this.loop);
-    else this.raf = 0;
   }
 
   /* ---------- growth ---------- */
@@ -611,7 +616,7 @@ export default class IceScene {
     ctx.globalCompositeOperation = 'lighter';
     ctx.strokeStyle = ring;
     for (const r of this.rings) {
-      const t = r.life / r.maxLife;
+      const t = clamp01(r.life / r.maxLife);
       const ease = 1 - (1 - t) * (1 - t);
       const radius = 6 + ease * r.maxR;
       ctx.globalAlpha = (1 - t) * r.alpha;
