@@ -174,8 +174,19 @@ const Hero = () => {
             <span className="text-xs font-medium tracking-wide text-ice-100">{HERO_TEXT.status}</span>
           </span>
           <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-ice-200/50">
-            {HERO_TEXT.eyebrow}
-            {time && <span className="ml-3 text-frost/80">{time} KST</span>}
+            {/* wrap between roles, never inside one; the dot stays with the role before it */}
+            {HERO_TEXT.eyebrow.split(' · ').map((part, i) => (
+              <span key={part}>
+                {i > 0 && ' · '}
+                <span className="whitespace-nowrap">{part}</span>
+              </span>
+            ))}
+            {time && (
+              <>
+                {' '}
+                <span className="ml-3 whitespace-nowrap text-frost/80">{time} KST</span>
+              </>
+            )}
           </span>
         </motion.div>
 
