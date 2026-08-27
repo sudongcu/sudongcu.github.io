@@ -32,7 +32,7 @@ export const EXPERIENCES = [
     start: '2024-01',
     end: '2025-11',
     description: 'Led development and operations of .NET 6 e-commerce APIs, managed team of 4 engineers, and coordinated client requirements.',
-    technologies: ['.NET 6', 'REST API', 'MySQL', 'Git', 'AWS', 'Docker', 'Linux', 'Redis', 'Elasticsearch', 'MSA']
+    technologies: ['.NET 6', 'REST API', 'Vue', 'MySQL', 'Git', 'Jira', 'AWS', 'Docker', 'Linux', 'Redis', 'Elasticsearch', 'MSA']
   },
   {
     id: 2,
@@ -43,7 +43,7 @@ export const EXPERIENCES = [
     start: '2021-10',
     end: '2023-12',
     description: 'Built architecture templates, managed Git Flow collaboration, and led .NET Core to .NET 6 migration while supporting high-traffic production services.',
-    technologies: ['.NET 6', '.NET Core', 'REST API', 'MySQL', 'Git', 'AWS', 'Docker', 'Linux', 'Redis', 'Elasticsearch', 'MSA']
+    technologies: ['.NET 6', '.NET Core', 'REST API', 'MySQL', 'Git', 'Jira', 'AWS', 'Docker', 'Linux', 'Redis', 'Elasticsearch', 'MSA']
   },
   {
     id: 3,
@@ -54,7 +54,7 @@ export const EXPERIENCES = [
     start: '2016-02',
     end: '2021-09',
     description: 'Developed travel reservation systems and back-office platforms using ASP.NET MVC, managed Windows server infrastructure.',
-    technologies: ['.NET Framework', 'MSSQL', 'ASP.NET MVC', 'JavaScript', 'jQuery', 'HTML', 'CSS', 'Windows Server']
+    technologies: ['.NET Framework', 'MSSQL', 'ASP.NET MVC', 'ASP.NET WebForms', 'JavaScript', 'jQuery', 'HTML', 'CSS', 'Windows Server']
   },
   {
     id: 4,
@@ -68,35 +68,47 @@ export const EXPERIENCES = [
   }
 ];
 
-// Tech Stack Categories
+// Tech Stack — each skill's `match` lists the technology names exactly as they
+// appear in EXPERIENCES; the Skills section adds up the time in production
+// from those entries and ranks by it (see utils/tenure.js). A skill without
+// `match` (or whose names never appear) still lists, after the dated ones,
+// without a bar.
 export const TECH_STACK = {
-  frontend: {
-    title: 'Frontend',
-    skills: [
-      { name: 'JavaScript', level: 90 },
-      { name: 'React / Vue', level: 85 },
-      { name: 'jQuery', level: 80 },
-      { name: 'HTML / CSS', level: 80 }
-    ]
-  },
   backend: {
     title: 'Backend',
     skills: [
-      { name: 'C# / .NET', level: 98 },
-      { name: 'MySQL / MSSQL', level: 90 },
-      { name: 'Redis', level: 80 },
-      { name: 'Elasticsearch', level: 70 }
-    ]
+      { name: 'C# / .NET', match: ['.NET', '.NET 6', '.NET Core', '.NET Framework'] },
+      { name: 'MySQL / MSSQL', match: ['MySQL', 'MSSQL'] },
+      { name: 'ASP.NET MVC / WebForms', match: ['ASP.NET MVC', 'ASP.NET WebForms'] },
+      { name: 'REST API / MSA', match: ['REST API', 'MSA'] },
+      { name: 'Redis / Valkey', match: ['Redis', 'Valkey'] },
+      { name: 'Elasticsearch', match: ['Elasticsearch'] },
+      { name: 'WinForm', match: ['WinForm'] },
+    ],
+  },
+  frontend: {
+    title: 'Frontend',
+    skills: [
+      { name: 'JavaScript', match: ['JavaScript'] },
+      { name: 'HTML / CSS', match: ['HTML', 'CSS'] },
+      { name: 'jQuery', match: ['jQuery'] },
+      { name: 'React', match: ['React'] },
+      { name: 'Flutter', match: ['Flutter'] },
+      { name: 'Vue', match: ['Vue'] },
+    ],
   },
   tools: {
-    title: 'Tools & Others',
+    title: 'Infra & tools',
     skills: [
-      { name: 'Git', level: 95 },
-      { name: 'Jira', level: 90 },
-      { name: 'AWS', level: 80 },
-      { name: 'Docker', level: 80 }
-    ]
-  }
+      { name: 'Windows Server', match: ['Windows Server'] },
+      { name: 'Git', match: ['Git'] },
+      { name: 'AWS', match: ['AWS'] },
+      { name: 'Docker', match: ['Docker'] },
+      { name: 'Linux', match: ['Linux'] },
+      { name: 'Claude Code', match: ['Claude Code'] },
+      { name: 'Jira', match: ['Jira'] },
+    ],
+  },
 };
 
 // Contact Information
