@@ -7,12 +7,12 @@ const LabLinkButton = ({ to = '/lab', direction = 'forward', onClick, className 
     <Link
       to={to}
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md border border-primary-500/40 text-primary-300 hover:border-primary-400 hover:bg-primary-500/10 hover:text-primary-200 transition-all ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border border-frost/30 bg-frost/5 px-3 py-1.5 text-sm font-medium text-frost transition-all hover:border-frost/60 hover:bg-frost/15 hover:text-ice-50 ${className}`}
     >
-      {isBack && <ArrowLeft className="w-3.5 h-3.5" />}
-      <FlaskConical className="w-4 h-4" />
+      {isBack && <ArrowLeft className="h-3.5 w-3.5" />}
+      <FlaskConical className="h-4 w-4" />
       <span>Lab</span>
-      {!isBack && <ArrowUpRight className="w-3.5 h-3.5" />}
+      {!isBack && <ArrowUpRight className="h-3.5 w-3.5" />}
     </Link>
   );
 };

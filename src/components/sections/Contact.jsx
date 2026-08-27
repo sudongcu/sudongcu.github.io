@@ -1,124 +1,104 @@
 import { motion } from 'framer-motion';
-import { Mail, Github, Linkedin } from 'lucide-react';
+import { ArrowUp, ArrowUpRight, Github, Linkedin } from 'lucide-react';
 import { CONTACT_INFO } from '../../constants';
+import SectionHeader from '../ui/SectionHeader';
+import Magnetic from '../ui/Magnetic';
+import FrostPanel from '../ui/FrostPanel';
 
-const Contact = () => {
-  const socialLinks = [
-    { icon: Github, url: CONTACT_INFO.github, label: 'GitHub' },
-    { icon: Linkedin, url: CONTACT_INFO.linkedin, label: 'LinkedIn' }
-  ];
+const EASE = [0.16, 1, 0.3, 1];
 
-  return (
-    <section id="contact" className="relative py-8 sm:py-12 lg:py-20 bg-dark-900">
-      <div className="section-container">
-        {/* Section Header */}
+const SOCIALS = [
+  { icon: Github, url: CONTACT_INFO.github, label: 'GitHub' },
+  { icon: Linkedin, url: CONTACT_INFO.linkedin, label: 'LinkedIn' },
+];
+
+const Contact = () => (
+  <section id="contact" className="relative overflow-hidden py-24 sm:py-32">
+    <div className="aurora-blob animate-aurora-1 -bottom-[30vw] left-1/2 h-[60vw] w-[60vw] -translate-x-1/2 bg-frost/20" />
+
+    <div className="section-container relative">
+      <SectionHeader
+        index="05"
+        label="Contact"
+        title={
+          <>
+            Have something in mind?
+            <br />
+            <span className="text-ice">I'm one message away.</span>
+          </>
+        }
+      />
+
+      <div className="mt-14 grid items-end gap-10 lg:grid-cols-12">
         <motion.div
-          className="text-center mb-8 sm:mb-12 lg:mb-16"
-          initial={{ opacity: 0, y: -20 }}
+          className="lg:col-span-8"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.9, ease: EASE }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Get In <span className="text-gradient">Touch</span>
-          </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Have a project in mind? Let's work together to bring your ideas to life
+          <Magnetic strength={0.12}>
+            <a
+              href={`mailto:${CONTACT_INFO.email}`}
+              className="group inline-flex items-center gap-3 break-all font-display text-[clamp(1.5rem,4.5vw,3.5rem)] font-bold leading-tight tracking-tight text-ice-50 transition-colors hover:text-frost"
+            >
+              {CONTACT_INFO.email}
+              <ArrowUpRight className="h-[0.8em] w-[0.8em] shrink-0 text-frost transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+            </a>
+          </Magnetic>
+          <div className="hairline mt-6" aria-hidden />
+          <p className="mt-4 text-ice-200/60">
+            Projects, opportunities, or just to say hi — replies usually within a day.
           </p>
         </motion.div>
 
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left Side - Email */}
-            <motion.div
-              className="space-y-6"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <div>
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  Let's Connect
-                </h3>
-                <p className="text-gray-400 leading-relaxed">
-                  Feel free to reach out for projects, opportunities, or just to say hi.
-                </p>
-              </div>
-
-              {/* Email */}
-              <a
-                href={`mailto:${CONTACT_INFO.email}`}
-                className="flex items-center gap-4 p-4 bg-dark-800 rounded-lg border border-dark-700 hover:border-primary-500/30 hover:bg-primary-500/10 transition-all group"
+        <motion.div
+          className="flex gap-3 lg:col-span-4 lg:justify-end"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.9, delay: 0.15, ease: EASE }}
+        >
+          {SOCIALS.map(({ icon: Icon, url, label }) => (
+            <Magnetic key={label} strength={0.25}>
+              <FrostPanel
+                as="a"
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="glass glass-hover grid h-14 w-14 place-items-center text-ice-200 hover:text-frost"
               >
-                <div className="p-3 bg-primary-500/20 rounded-lg">
-                  <Mail className="w-6 h-6 text-primary-400 group-hover:text-primary-300 transition-colors" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Email</p>
-                  <p className="text-white font-medium group-hover:text-primary-400 transition-colors">
-                    {CONTACT_INFO.email}
-                  </p>
-                </div>
-              </a>
-            </motion.div>
-
-            {/* Right Side - Social Links */}
-            <motion.div
-              className="space-y-6"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <div>
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  Follow Me
-                </h3>
-                <p className="text-gray-400 leading-relaxed mb-6">
-                  Connect with me on social platforms
-                </p>
-              </div>
-
-              <div className="flex items-center gap-4">
-                {socialLinks.map((social, index) => {
-                  const Icon = social.icon;
-                  return (
-                    <motion.a
-                      key={index}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center p-4 bg-dark-800 rounded-lg border border-dark-700 hover:border-primary-500/30 hover:bg-primary-500/10 transition-all group"
-                      whileHover={{ y: -5 }}
-                      aria-label={social.label}
-                    >
-                      <div className="p-3 bg-primary-500/20 rounded-lg">
-                        <Icon className="w-6 h-6 text-primary-400 group-hover:text-primary-300 transition-colors" />
-                      </div>
-                    </motion.a>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </div>
-        </div>
+                <Icon className="h-5 w-5" />
+              </FrostPanel>
+            </Magnetic>
+          ))}
+        </motion.div>
       </div>
 
-      {/* Footer */}
-      <motion.div
-        className="mt-20 pt-8 border-t border-dark-700"
+      <motion.footer
+        className="mt-24 flex flex-col items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ice-200/40 sm:flex-row"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
       >
-        <p className="text-center text-gray-500 text-sm">
-          Designed & Developed by Donggu Seo © {new Date().getFullYear()}
-        </p>
-      </motion.div>
-    </section>
-  );
-};
+        <span>© {new Date().getFullYear()} Donggu Seo</span>
+        <span>Designed & built in Seoul</span>
+        <a
+          href="#home"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="inline-flex items-center gap-1.5 transition-colors hover:text-frost"
+        >
+          Back to top
+          <ArrowUp className="h-3 w-3" />
+        </a>
+      </motion.footer>
+    </div>
+  </section>
+);
 
 export default Contact;
