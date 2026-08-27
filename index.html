@@ -15,6 +15,22 @@
         }
       }(window.location))
     </script>
+    <!-- Seasonal theme: ?season=… wins, then the saved choice, else the calendar (mirrors src/theme/SeasonProvider.jsx) -->
+    <script>
+      (function () {
+        var seasons = ['spring', 'summer', 'autumn', 'winter'];
+        var s = null;
+        try {
+          s = new URLSearchParams(location.search).get('season');
+          if (seasons.indexOf(s) < 0) s = localStorage.getItem('dg.season');
+        } catch (e) { s = null; }
+        if (seasons.indexOf(s) < 0) {
+          var m = new Date().getMonth() + 1;
+          s = m >= 3 && m <= 5 ? 'spring' : m >= 6 && m <= 8 ? 'summer' : m >= 9 && m <= 11 ? 'autumn' : 'winter';
+        }
+        document.documentElement.setAttribute('data-season', s);
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, follow" />

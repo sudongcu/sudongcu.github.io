@@ -2,6 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Seasonal palette (RGB triplets so Tailwind alpha modifiers work) ---------- */
+:root {
+  /* winter — glacier (default) */
+  --c-abyss: 5 11 22;
+  --c-deep: 8 19 36;
+  --c-ice-50: 244 250 255;
+  --c-ice-100: 228 242 255;
+  --c-ice-200: 201 230 255;
+  --c-ice-300: 163 214 255;
+  --c-ice-400: 124 196 255;
+  --c-frost: 127 230 255;
+  --c-glacier: 76 201 240;
+  --c-aurora: 139 156 255;
+  --c-mint: 143 245 224;
+}
+:root[data-season='spring'] {
+  /* blossom + fresh green on a plum night */
+  --c-abyss: 12 10 20;
+  --c-deep: 20 16 31;
+  --c-ice-50: 255 247 251;
+  --c-ice-100: 255 238 245;
+  --c-ice-200: 245 215 230;
+  --c-ice-300: 237 184 210;
+  --c-ice-400: 229 156 192;
+  --c-frost: 255 166 201;
+  --c-glacier: 155 231 168;
+  --c-aurora: 201 166 255;
+  --c-mint: 168 240 176;
+}
+:root[data-season='summer'] {
+  /* deep ocean, turquoise water, orange sun */
+  --c-abyss: 3 17 26;
+  --c-deep: 6 34 48;
+  --c-ice-50: 244 253 255;
+  --c-ice-100: 224 249 255;
+  --c-ice-200: 189 239 255;
+  --c-ice-300: 143 227 255;
+  --c-ice-400: 95 211 255;
+  --c-frost: 41 227 211;
+  --c-glacier: 255 138 61;
+  --c-aurora: 59 130 246;
+  --c-mint: 125 255 179;
+}
+:root[data-season='autumn'] {
+  /* dusk sky, gold → coral → magenta sunset, warm cream text */
+  --c-abyss: 15 9 26;
+  --c-deep: 27 15 38;
+  --c-ice-50: 255 248 240;
+  --c-ice-100: 255 239 223;
+  --c-ice-200: 248 217 184;
+  --c-ice-300: 240 191 138;
+  --c-ice-400: 232 167 96;
+  --c-frost: 255 200 87;
+  --c-glacier: 255 122 69;
+  --c-aurora: 255 77 141;
+  --c-mint: 181 229 106;
+}
+
 @layer base {
   * {
     @apply box-border m-0 p-0;
@@ -14,26 +72,27 @@
   body {
     @apply bg-abyss text-ice-100 font-sans antialiased;
     @apply overflow-x-hidden;
+    transition: background-color 0.8s ease, color 0.8s ease;
   }
 
   ::selection {
-    background: rgba(127, 230, 255, 0.35);
-    color: #f4faff;
+    background: rgb(var(--c-frost) / 0.35);
+    color: rgb(var(--c-ice-50));
   }
 
   ::-webkit-scrollbar {
     width: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #050b16;
+    background: rgb(var(--c-abyss));
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(127, 230, 255, 0.18);
+    background: rgb(var(--c-frost) / 0.18);
     border-radius: 999px;
-    border: 3px solid #050b16;
+    border: 3px solid rgb(var(--c-abyss));
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(127, 230, 255, 0.35);
+    background: rgb(var(--c-frost) / 0.35);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -64,19 +123,23 @@
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(
       110deg,
-      #f4faff 0%,
-      #c9e6ff 28%,
-      #7fe6ff 52%,
-      #8b9cff 78%,
-      #f4faff 100%
+      rgb(var(--c-ice-50)) 0%,
+      rgb(var(--c-ice-200)) 28%,
+      rgb(var(--c-frost)) 52%,
+      rgb(var(--c-aurora)) 78%,
+      rgb(var(--c-ice-50)) 100%
     );
     background-size: 200% 100%;
     animation: shimmer 8s ease-in-out infinite;
   }
 
-  /* Frosted glass panel */
+  /* Frosted glass panel. Positioned via :where() so an explicit `absolute` /
+     `fixed` on the same element (dropdowns, menus) still wins. */
+  :where(.glass) {
+    position: relative;
+  }
   .glass {
-    @apply relative rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+    @apply rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl;
     box-shadow:
       inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
       0 30px 80px -30px rgba(0, 0, 0, 0.7);
@@ -92,7 +155,7 @@
     border-radius: inherit;
     background:
       linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.025) 26%, transparent 52%),
-      radial-gradient(120% 90% at 100% 100%, rgba(127, 230, 255, 0.07), transparent 60%);
+      radial-gradient(120% 90% at 100% 100%, rgb(var(--c-frost) / 0.07), transparent 60%);
   }
 
   .glass-hover {
@@ -102,8 +165,8 @@
     @apply border-frost/40 bg-white/[0.07];
     box-shadow:
       inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
-      0 0 0 1px rgba(127, 230, 255, 0.12),
-      0 40px 90px -30px rgba(76, 201, 240, 0.35);
+      0 0 0 1px rgb(var(--c-frost) / 0.12),
+      0 40px 90px -30px rgb(var(--c-glacier) / 0.35);
   }
 
   .section-label {
@@ -147,17 +210,17 @@
 
   .btn-frost {
     @apply inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-abyss transition-all duration-300;
-    background-image: linear-gradient(120deg, #e4f2ff 0%, #7fe6ff 50%, #8b9cff 100%);
+    background-image: linear-gradient(120deg, rgb(var(--c-ice-100)) 0%, rgb(var(--c-frost)) 50%, rgb(var(--c-aurora)) 100%);
     background-size: 200% 100%;
     box-shadow:
-      0 10px 40px -10px rgba(127, 230, 255, 0.6),
+      0 10px 40px -10px rgb(var(--c-frost) / 0.6),
       inset 0 1px 0 rgba(255, 255, 255, 0.6);
   }
   .btn-frost:hover {
     background-position: 100% 50%;
     transform: translateY(-1px);
     box-shadow:
-      0 16px 50px -10px rgba(127, 230, 255, 0.8),
+      0 16px 50px -10px rgb(var(--c-frost) / 0.8),
       inset 0 1px 0 rgba(255, 255, 255, 0.7);
   }
 
@@ -166,6 +229,11 @@
   }
   .btn-ghost:hover {
     @apply border-frost/50 bg-frost/10 text-ice-50;
+  }
+
+  /* Slow breathing halo in the season's accent (season switch controls) */
+  .season-glow {
+    animation: season-breathe 3.2s ease-in-out infinite;
   }
 
   .link-underline {
@@ -187,5 +255,19 @@
   .frost {
     overflow: hidden;
     isolation: isolate;
+  }
+}
+
+@keyframes season-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(var(--c-frost) / 0),
+      0 0 18px -6px rgb(var(--c-frost) / 0.55);
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px rgb(var(--c-frost) / 0.14),
+      0 0 28px -4px rgb(var(--c-frost) / 0.85);
   }
 }

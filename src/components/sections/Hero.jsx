@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
-import { ArrowDown, ArrowUpRight, Snowflake } from 'lucide-react';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { HERO_TEXT, HERO_TICKER } from '../../constants';
 import HeroCanvas from '../canvas/HeroCanvas';
 import Magnetic from '../ui/Magnetic';
 import FrostPanel from '../ui/FrostPanel';
 import IceLayer from '../ui/ice/IceLayer';
+import useSeason from '../../theme/useSeason';
+import SeasonRail from '../ui/SeasonRail';
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -86,6 +88,8 @@ const Hero = () => {
   const sectionRef = useRef(null);
   const pointerRef = useRef({ x: 0, y: 0 });
   const time = useSeoulTime();
+  const { season, config } = useSeason();
+  const TickerIcon = config.Icon;
   const [showCanvas, setShowCanvas] = useState(false);
 
   useEffect(() => {
@@ -133,17 +137,17 @@ const Hero = () => {
 
       {/* Fine grid + vignette */}
       <div className="grid-lines absolute inset-0 opacity-70 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,#000_30%,transparent_100%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,#050b16_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgb(var(--c-abyss))_100%)]" />
 
-      {/* Frost crystals growing in from the corners */}
+      {/* Seasonal growth creeping in from the corners */}
       <div className="pointer-events-none absolute inset-0 z-[3]" aria-hidden>
-        <IceLayer active frost="corners" level={0.5} seeds={18} reach={0.15} />
+        <IceLayer active frost="corners" level={0.5} seeds={18} reach={0.15} ripples={false} />
       </div>
 
       {/* Cursor spotlight */}
       <motion.div className="pointer-events-none absolute inset-0 z-[1]" style={{ background: spotlight }} />
 
-      {/* 3D glacier logo */}
+      {/* 3D seasonal glass logo */}
       {showCanvas && (
         <motion.div
           className="absolute inset-0 z-[2] opacity-70 md:opacity-100 lg:left-[32%]"
@@ -151,7 +155,7 @@ const Hero = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.6, delay: 0.2, ease: EASE }}
         >
-          <HeroCanvas pointerRef={pointerRef} />
+          <HeroCanvas pointerRef={pointerRef} season={season} />
         </motion.div>
       )}
 
@@ -204,6 +208,20 @@ const Hero = () => {
             </FrostPanel>
           </Magnetic>
         </motion.div>
+
+        <motion.div variants={fadeUp(1.2)} className="mb-4 mt-8 md:hidden">
+          <SeasonRail orientation="horizontal" />
+        </motion.div>
+      </motion.div>
+
+      {/* Season dial */}
+      <motion.div
+        className="absolute right-6 top-1/2 z-10 hidden -translate-y-1/2 md:block lg:right-10"
+        initial={{ opacity: 0, x: 12 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1.4, duration: 0.9, ease: EASE }}
+      >
+        <SeasonRail orientation="vertical" />
       </motion.div>
 
       {/* Scroll cue */}
@@ -231,7 +249,7 @@ const Hero = () => {
                 className="flex items-center gap-8 pr-8 font-mono text-[11px] uppercase tracking-[0.3em] text-ice-200/50"
               >
                 {item}
-                <Snowflake className="h-3 w-3 text-frost/50" aria-hidden />
+                <TickerIcon className="h-3 w-3 text-frost/50" aria-hidden />
               </span>
             ))}
           </div>

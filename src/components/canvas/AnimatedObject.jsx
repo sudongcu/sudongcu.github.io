@@ -3,26 +3,22 @@ import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { SEASONS } from '../../theme/seasons';
 
 const MODEL_URL = '/models/logo.glb';
 const RAW_WIDTH = 63; // model bounds are roughly ±31.5 on X
-const ICE = new THREE.Color('#e4f2ff');
 
 /**
- * What the ice refracts. A bright vertical gradient (ice white → frost →
- * aurora) makes the logo glow from within; a dark background would just
- * read as smoked glass.
+ * What the glass refracts: a bright vertical gradient in the season's colours
+ * makes the logo glow from within (a dark backdrop reads as smoked glass).
  */
-const makeIceBackdrop = () => {
+const makeBackdrop = (stops) => {
   const canvas = document.createElement('canvas');
   canvas.width = 4;
   canvas.height = 256;
   const ctx = canvas.getContext('2d');
   const gradient = ctx.createLinearGradient(0, 0, 0, 256);
-  gradient.addColorStop(0, '#f4faff');
-  gradient.addColorStop(0.45, '#9fe9ff');
-  gradient.addColorStop(0.75, '#7fd0ff');
-  gradient.addColorStop(1, '#8b9cff');
+  stops.forEach((color, i) => gradient.addColorStop(i / (stops.length - 1), color));
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, 4, 256);
   const texture = new THREE.CanvasTexture(canvas);
@@ -31,12 +27,15 @@ const makeIceBackdrop = () => {
 };
 
 /**
- * Merge every piece of the logo into one geometry, carrying each piece's
- * (ice-lifted) tint as a vertex color. One mesh + one transmission material
- * means one refraction pass per frame instead of one per piece — and the
- * pieces no longer occlude each other as black silhouettes inside the buffer.
+ * Merge every piece of the logo into one geometry, carrying each piece's tint
+ * (its original colour pulled toward the season tint) as a vertex colour. One
+ * mesh + one transmission material means one refraction pass per frame, and
+ * the pieces no longer occlude each other as black silhouettes in the buffer.
+ * Normals are rebuilt from winding — the exported ones are unreliable, which
+ * reads as black (Fresnel ≈ 1) on a transmissive material.
  */
-const buildGeometry = (scene) => {
+const buildGeometry = (scene, tintHex, tintMix) => {
+  const tintColor = new THREE.Color(tintHex);
   const parts = [];
   scene.traverse((child) => {
     if (!child.isMesh) return;
@@ -45,11 +44,9 @@ const buildGeometry = (scene) => {
     Object.keys(g.attributes).forEach((name) => {
       if (name !== 'position') g.deleteAttribute(name);
     });
-    // Rebuild normals from winding: the exported normals are unreliable on
-    // some faces, which reads as black (Fresnel ≈ 1) on a transmissive material.
     g.computeVertexNormals();
 
-    const tint = (child.material?.color ?? new THREE.Color('#7fe6ff')).clone().lerp(ICE, 0.35);
+    const tint = (child.material?.color ?? new THREE.Color('#7fe6ff')).clone().lerp(tintColor, tintMix);
     const count = g.attributes.position.count;
     const colors = new Float32Array(count * 3);
     for (let i = 0; i < count; i += 1) {
@@ -67,11 +64,12 @@ const buildGeometry = (scene) => {
   return merged;
 };
 
-const GlacierLogo = () => {
+/** The DG logo as a slab of seasonal glass: ice, blossom, sea, or amber. */
+const SeasonLogo = ({ logo = SEASONS.winter.logo }) => {
   const { scene } = useGLTF(MODEL_URL);
   const { viewport } = useThree();
-  const geometry = useMemo(() => buildGeometry(scene), [scene]);
-  const backdrop = useMemo(() => makeIceBackdrop(), []);
+  const geometry = useMemo(() => buildGeometry(scene, logo.tint, logo.tintMix), [scene, logo.tint, logo.tintMix]);
+  const backdrop = useMemo(() => makeBackdrop(logo.backdrop), [logo.backdrop]);
 
   useEffect(() => () => geometry.dispose(), [geometry]);
   useEffect(() => () => backdrop.dispose(), [backdrop]);
@@ -93,7 +91,7 @@ const GlacierLogo = () => {
           samples={4}
           resolution={384}
           transmission={1}
-          roughness={0.3}
+          roughness={logo.roughness}
           thickness={1.2}
           ior={1.33}
           chromaticAberration={0.06}
@@ -104,7 +102,7 @@ const GlacierLogo = () => {
           clearcoat={1}
           clearcoatRoughness={0.1}
           attenuationDistance={3}
-          attenuationColor="#9fdcff"
+          attenuationColor={logo.attenuation}
           envMapIntensity={1.2}
         />
       </mesh>
@@ -114,4 +112,4 @@ const GlacierLogo = () => {
 
 useGLTF.preload(MODEL_URL);
 
-export default GlacierLogo;
+export default SeasonLogo;

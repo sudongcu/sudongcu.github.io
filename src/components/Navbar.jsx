@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { NAV_LINKS, EXTERNAL_NAV_LINKS } from '../constants';
 import LabLinkButton from './LabLinkButton';
+import SeasonPicker from './ui/SeasonPicker';
 
 const scrollToId = (id, offset = 96) => {
   const element = document.getElementById(id);
@@ -106,6 +107,13 @@ const Navbar = () => {
           ))}
         </div>
 
+        <span className="mx-1 hidden h-5 w-5 items-center justify-center md:flex" aria-hidden>
+          <span className="h-5 w-px bg-white/10" />
+        </span>
+        <div className="hidden md:block">
+          <SeasonPicker />
+        </div>
+
         {/* Mobile toggle */}
         <button
           type="button"
@@ -126,7 +134,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="glass pointer-events-auto absolute left-4 right-4 top-full mt-3 p-2 md:hidden"
+            className="pointer-events-auto absolute left-4 right-4 top-full mt-3 rounded-2xl border border-white/15 bg-deep/95 p-2 shadow-[0_28px_70px_-20px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-2xl md:hidden"
           >
             {NAV_LINKS.map((link) => (
               <a
@@ -136,7 +144,7 @@ const Navbar = () => {
                 className={`block rounded-xl px-4 py-3 text-base font-medium transition-colors ${
                   activeSection === link.id
                     ? 'bg-white/10 text-ice-50'
-                    : 'text-ice-200/70 hover:bg-white/5 hover:text-ice-50'
+                    : 'text-ice-100 hover:bg-white/10 hover:text-ice-50'
                 }`}
               >
                 {link.title}
@@ -153,6 +161,9 @@ const Navbar = () => {
                 />
               ))}
             </div>
+            <div className="hairline my-2" aria-hidden />
+            <p className="px-4 pb-1 pt-2 font-mono text-[10px] uppercase tracking-[0.25em] text-ice-200/40">Season</p>
+            <SeasonPicker variant="list" onPick={() => setIsMobileMenuOpen(false)} />
           </motion.div>
         )}
       </AnimatePresence>

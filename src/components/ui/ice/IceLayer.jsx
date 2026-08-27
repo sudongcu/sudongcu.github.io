@@ -1,24 +1,27 @@
 import { useEffect, useRef } from 'react';
 import IceScene from './engine';
 import { symbolPoints } from './symbols';
+import useSeason from '../../../theme/useSeason';
 
 const REST_LEVEL = 0.45;
 
 /**
- * Canvas overlay that frosts its positioned parent.
+ * Canvas overlay that dresses its positioned parent in the current season.
  *
- *  active   – grow frost up to `level` (and keep it) while true; dims back to the
- *             resting level (or clears, when `rest` is false) when it turns false
- *  burst    – increment to drop a shower of ice from the top edge
- *  frost    – 'edges' | 'corners' | false
- *  rest     – grow a light frost on mount (off by default: panes rest as clear
- *             ice and only frost over on hover, so the page stays calm)
+ *  active   – grow (frost / vines / branches, or summer ripples) up to `level`
+ *             while true; dims back to the resting level (or clears, when
+ *             `rest` is false) when it turns false
+ *  burst    – increment to release a shower of seasonal pieces
+ *  frost    – 'edges' | 'corners' | false — where growth starts from
+ *  rest     – grow a light layer on mount (off by default: panes rest clear and
+ *             only come alive on hover, so the page stays calm)
+ *  ripples  – allow the summer ambient ripples (off for the hero backdrop)
  *  symbol   – lucide `__iconNode`; particles assemble into it, `null` shatters it
  *  anchor   – where the symbol sits, as fractions of the parent size
  *
  * Elements marked `data-frost-clear` (searched under the canvas parent, or under
- * `clearRootRef` when the text lives outside the frosted pane) are kept clear:
- * crystals stop growing when they reach them, so copy stays legible.
+ * `clearRootRef` when the text lives outside the pane) are kept clear: growth
+ * stops when it reaches them, so copy stays legible.
  */
 const IceLayer = ({
   active = false,
@@ -28,6 +31,7 @@ const IceLayer = ({
   level = 1,
   seeds = 26,
   reach = 0.34,
+  ripples = true,
   symbol = null,
   anchor = { x: 0.5, y: 0.5 },
   symbolSize = 150,
@@ -35,6 +39,8 @@ const IceLayer = ({
   clearRootRef = null,
   className = '',
 }) => {
+  const { season, config } = useSeason();
+  const style = config.engine;
   const canvasRef = useRef(null);
   const sceneRef = useRef(null);
   const clearRef = useRef(clearRootRef);
@@ -62,7 +68,8 @@ const IceLayer = ({
     const canvas = canvasRef.current;
     if (!canvas) return undefined;
     const parent = canvas.parentElement;
-    const scene = new IceScene(canvas);
+    const scene = new IceScene(canvas, style);
+    scene.ripplesEnabled = ripples;
     sceneRef.current = scene;
 
     const measure = () => {
@@ -82,9 +89,26 @@ const IceLayer = ({
       scene.destroy();
       sceneRef.current = null;
     };
-    // mount-only: rest/frost/seeds/reach describe the initial pane
+    // mount-only: rest/frost/seeds/reach/style describe the initial pane
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Season change: restyle, and regrow whatever is currently showing.
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+    scene.setStyle(style);
+    scene.ripplesEnabled = ripples;
+    if (scene.frostTarget > 0 && frost) {
+      const target = scene.frostTarget;
+      scene.resetFrost();
+      scene.growFrost({ from: frost, seeds, reach, target });
+    } else {
+      scene.draw();
+    }
+    // regrow only when the season (style) changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [season]);
 
   useEffect(() => {
     const scene = sceneRef.current;
