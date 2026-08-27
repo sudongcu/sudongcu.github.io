@@ -30,7 +30,9 @@ const ExperienceRow = ({ exp, index, formed, onToggle }) => {
   return (
     <motion.li
       ref={rowRef}
-      className="group relative isolate border-b border-white/[0.06] py-8 last:border-b-0 md:grid md:cursor-pointer md:grid-cols-12 md:gap-8 md:py-10"
+      className={`group relative isolate cursor-pointer border-b border-white/[0.06] py-8 transition-[padding] duration-500 last:border-b-0 md:grid md:grid-cols-12 md:gap-8 md:py-10 ${
+        formed ? 'pt-48 md:pt-10' : ''
+      }`}
       onMouseEnter={() => {
         setHovered(true);
         trigger();
@@ -42,7 +44,27 @@ const ExperienceRow = ({ exp, index, formed, onToggle }) => {
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.8, delay: index * 0.06, ease: EASE }}
     >
-      {/* frosted pane behind the row: frost grows on hover, ice assembles the symbol on click */}
+      {/* narrow screens: the copy is stacked with no room beside it, so a tap opens a
+          stage above the row (the extra top padding) and the symbol forms there */}
+      <span
+        aria-hidden
+        className={`frost pointer-events-none absolute inset-x-0 top-2 -z-10 h-40 rounded-2xl transition-colors duration-500 md:hidden ${
+          formed ? 'bg-white/[0.035]' : 'bg-white/0'
+        }`}
+      >
+        <IceLayer
+          active={formed}
+          burst={burst}
+          symbol={symbol}
+          anchor={{ x: 0.5, y: 0.5 }}
+          symbolSize={120}
+          symbolStep={3}
+          seeds={24}
+          reach={0.3}
+        />
+      </span>
+      {/* wide screens: frosted pane behind the whole row — frost grows on hover, ice
+          assembles the symbol in the date column on click */}
       <span
         aria-hidden
         className={`frost pointer-events-none absolute -inset-x-5 inset-y-2 -z-10 hidden rounded-2xl transition-colors duration-500 md:block ${
@@ -84,6 +106,9 @@ const ExperienceRow = ({ exp, index, formed, onToggle }) => {
             )}
           </p>
           <p className="mt-1.5 text-ice-200/45">{period.duration}</p>
+          <p className="mt-1.5 text-[10px] tracking-[0.25em] text-ice-200/35 md:hidden">
+            {formed ? 'tap to release' : 'tap to crystallize'}
+          </p>
         </div>
         <p
           data-frost-clear
