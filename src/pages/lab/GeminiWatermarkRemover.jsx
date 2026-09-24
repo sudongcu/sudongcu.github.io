@@ -5,7 +5,7 @@ import useLabPalette from './useLabPalette';
 import { useSeo } from '../../hooks/useSeo';
 import { preloadMigan, inpaintWithMigan } from '../../utils/migan';
 
-const GATE_HASH = 'd1a5e76347c48f515e147c752f3576fed4cd3aaf6e8ebd69fb0cc996b99361a8';
+const GATE_HASH = '78a5bf821b96ea447a7c5f414cd9de7d82e783c0642a53e8fbe0ce201fbf83ca';
 const GATE_KEY = 'gwr-unlocked';
 
 const sha256Hex = async (text) => {
