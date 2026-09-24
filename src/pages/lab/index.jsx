@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, FlaskConical, Smartphone } from 'lucide-react';
+import { ArrowUpRight, FlaskConical, Smartphone, Image as ImageIcon } from 'lucide-react';
 import LabShell from './LabShell';
 import { useSeo } from '../../hooks/useSeo';
 
@@ -16,8 +16,16 @@ const TOOLS = [
     thumbnail: '/labs/phoneframe.png',
     specs: ['Image', 'Mockup', 'PNG export'],
   },
+  {
+    id: 'EXP-03',
+    slug: 'screenshot-beautifier',
+    title: 'Screenshot Beautifier',
+    description: 'Drop a screenshot onto a gradient background with padding, rounded corners and a soft shadow, then download the PNG.',
+    icon: ImageIcon,
+    specs: ['Image', 'Gradient', 'PNG export'],
+  },
 ];
-const NEXT_SLOT = 'EXP-03';
+const NEXT_SLOT = 'EXP-04';
 
 const reveal = (delay) => ({
   initial: { opacity: 0, y: 14 },

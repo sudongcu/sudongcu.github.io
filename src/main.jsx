@@ -5,6 +5,7 @@ import './index.css'
 import App from './App.jsx'
 import Lab from './pages/lab/index.jsx'
 import PhoneFrame from './pages/lab/PhoneFrame.jsx'
+import ScreenshotBeautifier from './pages/lab/ScreenshotBeautifier.jsx'
 import GeminiWatermarkRemover from './pages/lab/GeminiWatermarkRemover.jsx'
 
 createRoot(document.getElementById('root')).render(
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<App />} />
         <Route path="/lab" element={<Lab />} />
         <Route path="/lab/phoneframe" element={<PhoneFrame />} />
+        <Route path="/lab/screenshot-beautifier" element={<ScreenshotBeautifier />} />
         <Route path="/lab/gemini-watermark-remover" element={<GeminiWatermarkRemover />} />
       </Routes>
     </BrowserRouter>

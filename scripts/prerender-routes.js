@@ -39,6 +39,24 @@ const ROUTES = [
       isAccessibleForFree: true,
     },
   },
+  {
+    path: '/lab/screenshot-beautifier',
+    title: 'Screenshot Beautifier — Free Gradient Background Tool | DG.DEV Lab',
+    description:
+      'Drop a screenshot onto a gradient background with padding, rounded corners and a soft shadow, then download the PNG. Free, browser-based, no uploads.',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Screenshot Beautifier',
+      url: url('/lab/screenshot-beautifier'),
+      applicationCategory: 'DesignApplication',
+      operatingSystem: 'Any (browser)',
+      description:
+        'Free browser-based tool that drops a screenshot onto a gradient background with padding, rounded corners and a soft shadow, then exports a PNG.',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      isAccessibleForFree: true,
+    },
+  },
 ];
 
 const escapeAttr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
