@@ -5,6 +5,7 @@
 ## Tools
 
 - [PhoneFrame](https://sudongcu.github.io/lab/phoneframe/): Wrap a screenshot in a realistic iPhone-style mockup frame and export as PNG. Supports portrait and landscape, custom status bar, drag-and-drop image input.
+- [Screenshot Beautifier](https://sudongcu.github.io/lab/screenshot-beautifier/): Drop a screenshot onto a gradient (or solid/transparent) background with adjustable padding, rounded corners and a soft shadow, choose an aspect ratio, and export as PNG. Drag-and-drop or paste image input.
 
 ## Index
 
