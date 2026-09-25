@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Download, RotateCcw, Image as ImageIcon, Pipette } from 'lucide-react';
+import { Download, RotateCcw, Image as ImageIcon, Pipette, SlidersHorizontal, RefreshCw } from 'lucide-react';
 import LabShell from './LabShell';
 import { useSeo } from '../../hooks/useSeo';
 
@@ -159,8 +159,12 @@ const ScreenshotBeautifier = () => {
   const [isExporting, setIsExporting] = useState(false);
 
   const [bgId, setBgId] = useState('grape');
+  // '' → use a preset (bgId); 'solid' → customColor; 'gradient' → grad* below
+  const [customMode, setCustomMode] = useState('');
   const [customColor, setCustomColor] = useState('#3b82f6');
-  const [useCustom, setUseCustom] = useState(false);
+  const [gradFrom, setGradFrom] = useState('#6d28d9');
+  const [gradTo, setGradTo] = useState('#f59e0b');
+  const [gradAngle, setGradAngle] = useState(135);
   const [padding, setPadding] = useState(12); // % of short side
   const [radius, setRadius] = useState(24); // 0..100 → fraction of short side
   const [shadow, setShadow] = useState(55); // 0..100, 0 = off
@@ -217,20 +221,29 @@ const ScreenshotBeautifier = () => {
     ctx.clearRect(0, 0, CW, CH);
 
     // Background.
-    const bg = BACKGROUNDS.find((b) => b.id === bgId) || BACKGROUNDS[0];
-    if (useCustom) {
+    if (customMode === 'solid') {
       ctx.fillStyle = customColor;
       ctx.fillRect(0, 0, CW, CH);
-    } else if (bg.kind === 'linear') {
-      const [x0, y0, x1, y1] = gradientCoords(bg.angle, CW, CH);
+    } else if (customMode === 'gradient') {
+      const [x0, y0, x1, y1] = gradientCoords(gradAngle, CW, CH);
       const grad = ctx.createLinearGradient(x0, y0, x1, y1);
-      bg.stops.forEach((c, i) => grad.addColorStop(i / (bg.stops.length - 1), c));
+      grad.addColorStop(0, gradFrom);
+      grad.addColorStop(1, gradTo);
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, CW, CH);
-    } else if (bg.kind === 'solid') {
-      ctx.fillStyle = bg.color;
-      ctx.fillRect(0, 0, CW, CH);
-    } // 'none' → leave transparent
+    } else {
+      const bg = BACKGROUNDS.find((b) => b.id === bgId) || BACKGROUNDS[0];
+      if (bg.kind === 'linear') {
+        const [x0, y0, x1, y1] = gradientCoords(bg.angle, CW, CH);
+        const grad = ctx.createLinearGradient(x0, y0, x1, y1);
+        bg.stops.forEach((c, i) => grad.addColorStop(i / (bg.stops.length - 1), c));
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, CW, CH);
+      } else if (bg.kind === 'solid') {
+        ctx.fillStyle = bg.color;
+        ctx.fillRect(0, 0, CW, CH);
+      } // 'none' → leave transparent
+    }
 
     // Soft drop shadow cast by the screenshot's rounded rectangle.
     if (shadow > 0) {
@@ -251,7 +264,7 @@ const ScreenshotBeautifier = () => {
     ctx.clip();
     ctx.drawImage(img, ix, iy, iw, ih);
     ctx.restore();
-  }, [imageUrl, geom, bgId, useCustom, customColor, radius, shadow]);
+  }, [imageUrl, geom, bgId, customMode, customColor, gradFrom, gradTo, gradAngle, radius, shadow]);
 
   const handleFileChange = (e) => {
     const file = e.target.files && e.target.files[0];
@@ -354,7 +367,7 @@ const ScreenshotBeautifier = () => {
 
         <div className="flex w-full justify-center overflow-x-auto">
           {imageUrl ? (
-            <div className={`rounded-xl p-2 ${!useCustom && bgId === 'none' ? 'sb-check' : ''}`}>
+            <div className={`rounded-xl p-2 ${customMode === '' && bgId === 'none' ? 'sb-check' : ''}`}>
               <canvas ref={canvasRef} className="block h-auto max-w-full rounded-lg" style={{ maxHeight: '60vh' }} />
             </div>
           ) : (
@@ -370,7 +383,7 @@ const ScreenshotBeautifier = () => {
               <span className="lab-label text-frost/80">Background</span>
               <div className="flex flex-wrap gap-2">
                 {BACKGROUNDS.map((bg) => {
-                  const active = !useCustom && bgId === bg.id;
+                  const active = customMode === '' && bgId === bg.id;
                   return (
                     <button
                       key={bg.id}
@@ -379,7 +392,7 @@ const ScreenshotBeautifier = () => {
                       aria-label={bg.name}
                       aria-pressed={active}
                       onClick={() => {
-                        setUseCustom(false);
+                        setCustomMode('');
                         setBgId(bg.id);
                       }}
                       className={`sb-swatch ${bg.id === 'none' ? 'sb-check' : ''} ${active ? 'is-active' : ''}`}
@@ -390,15 +403,16 @@ const ScreenshotBeautifier = () => {
                 <label
                   title="Custom colour"
                   aria-label="Custom colour"
-                  className={`sb-swatch relative overflow-hidden ${useCustom ? 'is-active' : ''}`}
+                  className={`sb-swatch relative overflow-hidden ${customMode === 'solid' ? 'is-active' : ''}`}
                 >
                   <input
                     type="color"
                     value={customColor}
                     onChange={(e) => {
                       setCustomColor(e.target.value);
-                      setUseCustom(true);
+                      setCustomMode('solid');
                     }}
+                    onClick={() => setCustomMode('solid')}
                     className="absolute inset-0 z-10 cursor-pointer opacity-0"
                   />
                   {/* rainbow frame signals "any colour"; the inner square shows the current pick */}
@@ -419,7 +433,65 @@ const ScreenshotBeautifier = () => {
                     <Pipette className="h-3 w-3 text-white mix-blend-difference" strokeWidth={2.5} />
                   </span>
                 </label>
+
+                <button
+                  type="button"
+                  title="Custom gradient"
+                  aria-label="Custom gradient"
+                  aria-pressed={customMode === 'gradient'}
+                  onClick={() => setCustomMode('gradient')}
+                  className={`sb-swatch relative overflow-hidden ${customMode === 'gradient' ? 'is-active' : ''}`}
+                  style={{ background: `linear-gradient(${gradAngle}deg, ${gradFrom}, ${gradTo})` }}
+                >
+                  <span className="pointer-events-none absolute inset-0 grid place-items-center">
+                    <SlidersHorizontal className="h-3 w-3 text-white mix-blend-difference" strokeWidth={2.5} />
+                  </span>
+                </button>
               </div>
+
+              {customMode === 'gradient' && (
+                <div className="mt-1 flex flex-col gap-3 border-t border-white/10 pt-3">
+                  <div className="flex items-center gap-4">
+                    <span className="lab-label min-w-[5.5rem]">Colours</span>
+                    <label className="sb-swatch relative overflow-hidden" title="From colour" style={{ background: gradFrom }}>
+                      <input
+                        type="color"
+                        value={gradFrom}
+                        onChange={(e) => {
+                          setGradFrom(e.target.value);
+                          setCustomMode('gradient');
+                        }}
+                        className="absolute inset-0 cursor-pointer opacity-0"
+                      />
+                    </label>
+                    <span className="text-ice-400" aria-hidden>→</span>
+                    <label className="sb-swatch relative overflow-hidden" title="To colour" style={{ background: gradTo }}>
+                      <input
+                        type="color"
+                        value={gradTo}
+                        onChange={(e) => {
+                          setGradTo(e.target.value);
+                          setCustomMode('gradient');
+                        }}
+                        className="absolute inset-0 cursor-pointer opacity-0"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      title="Swap colours"
+                      aria-label="Swap colours"
+                      onClick={() => {
+                        setGradFrom(gradTo);
+                        setGradTo(gradFrom);
+                      }}
+                      className="ml-auto text-ice-300 transition-colors hover:text-frost"
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <Slider label="Angle" value={gradAngle} min={0} max={360} onChange={setGradAngle} suffix="°" />
+                </div>
+              )}
             </div>
 
             <div className="lab-panel flex flex-col gap-3 p-4">
