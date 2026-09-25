@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Download, RotateCcw, Image as ImageIcon } from 'lucide-react';
+import { Download, RotateCcw, Image as ImageIcon, Pipette } from 'lucide-react';
 import LabShell from './LabShell';
 import { useSeo } from '../../hooks/useSeo';
 
@@ -97,13 +97,23 @@ const computeGeom = (w, h, paddingPct, aspect) => {
   return { CW, CH, iw, ih, ix: (CW - iw) / 2, iy: (CH - ih) / 2, outScale, short };
 };
 
-/** A label + segmented switch row, matching the lab controls elsewhere. */
-const Switch = ({ label, value, onChange, options }) => (
+/**
+ * A label + segmented switch row, matching the lab controls elsewhere.
+ * `dense` stretches the control to fill the row with equal-width buttons that
+ * never wrap — used where every option must stay on one line.
+ */
+const Switch = ({ label, value, onChange, options, dense }) => (
   <div className="flex items-center gap-4">
-    <span className="lab-label min-w-[5.5rem]">{label}</span>
-    <div className="lab-seg flex-wrap" role="group" aria-label={label}>
+    <span className={`lab-label ${dense ? 'min-w-0 shrink-0' : 'min-w-[5.5rem]'}`}>{label}</span>
+    <div className={`lab-seg ${dense ? 'flex min-w-0 flex-1' : 'flex-wrap'}`} role="group" aria-label={label}>
       {options.map(([val, text]) => (
-        <button key={String(val)} type="button" aria-pressed={value === val} onClick={() => onChange(val)} className="lab-seg-btn">
+        <button
+          key={String(val)}
+          type="button"
+          aria-pressed={value === val}
+          onClick={() => onChange(val)}
+          className={`lab-seg-btn ${dense ? 'min-w-0 flex-1 whitespace-nowrap !px-1.5 !tracking-[0.03em]' : ''}`}
+        >
           {text}
         </button>
       ))}
@@ -381,7 +391,6 @@ const ScreenshotBeautifier = () => {
                   title="Custom colour"
                   aria-label="Custom colour"
                   className={`sb-swatch relative overflow-hidden ${useCustom ? 'is-active' : ''}`}
-                  style={{ background: customColor }}
                 >
                   <input
                     type="color"
@@ -390,10 +399,24 @@ const ScreenshotBeautifier = () => {
                       setCustomColor(e.target.value);
                       setUseCustom(true);
                     }}
-                    className="absolute inset-0 cursor-pointer opacity-0"
+                    className="absolute inset-0 z-10 cursor-pointer opacity-0"
                   />
-                  <span className="pointer-events-none absolute inset-0 grid place-items-center text-[10px] font-bold text-white mix-blend-difference">
-                    +
+                  {/* rainbow frame signals "any colour"; the inner square shows the current pick */}
+                  <span
+                    className="pointer-events-none absolute inset-0"
+                    style={{
+                      background:
+                        'conic-gradient(from 90deg, #ff004d, #ff9a00, #ffee00, #24d16a, #00b3ff, #7a5cff, #ff2fb3, #ff004d)',
+                    }}
+                    aria-hidden
+                  />
+                  <span
+                    className="pointer-events-none absolute inset-[3px] rounded-[3px]"
+                    style={{ background: customColor }}
+                    aria-hidden
+                  />
+                  <span className="pointer-events-none absolute inset-0 grid place-items-center">
+                    <Pipette className="h-3 w-3 text-white mix-blend-difference" strokeWidth={2.5} />
                   </span>
                 </label>
               </div>
@@ -404,7 +427,7 @@ const ScreenshotBeautifier = () => {
               <Slider label="Padding" value={padding} min={0} max={40} onChange={setPadding} />
               <Slider label="Corners" value={radius} min={0} max={100} onChange={setRadius} />
               <Slider label="Shadow" value={shadow} min={0} max={100} onChange={setShadow} />
-              <Switch label="Aspect" value={aspect} onChange={setAspect} options={AR_OPTIONS} />
+              <Switch label="Aspect" value={aspect} onChange={setAspect} options={AR_OPTIONS} dense />
             </div>
           </div>
         )}
