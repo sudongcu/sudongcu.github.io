@@ -22,6 +22,7 @@ const TOOLS = [
     title: 'Screenshot Beautifier',
     description: 'Drop a screenshot onto a gradient background with padding, rounded corners and a soft shadow, then download the PNG.',
     icon: ImageIcon,
+    thumbnail: '/labs/screenshot-beautifier.png',
     specs: ['Image', 'Gradient', 'PNG export'],
   },
 ];

@@ -44,6 +44,7 @@ const ROUTES = [
     title: 'Screenshot Beautifier — Free Gradient Background Tool | DG.DEV Lab',
     description:
       'Drop a screenshot onto a gradient background with padding, rounded corners and a soft shadow, then download the PNG. Free, browser-based, no uploads.',
+    image: '/labs/screenshot-beautifier.png',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',

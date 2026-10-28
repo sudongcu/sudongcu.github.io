@@ -148,6 +148,7 @@ const ScreenshotBeautifier = () => {
     description:
       'Drop a screenshot onto a gradient background with padding, rounded corners and a soft shadow, then download the PNG. Free, browser-based, no uploads.',
     path: '/lab/screenshot-beautifier',
+    image: '/labs/screenshot-beautifier.png',
     jsonLd: SB_JSON_LD,
   });
 
